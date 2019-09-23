@@ -39,7 +39,6 @@ begin
   LoadConfig := TLoadConfig.Create;
 end;
 
-// pega o id do cliente no Handle do Socket
 class function TFunction.GetClientID(H: Cardinal): Word;
 var
   I: Word;

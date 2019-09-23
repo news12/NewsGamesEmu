@@ -47,7 +47,7 @@ Var
   // Estrutura SkillData
   // Quiz: sQuiz; // Estrutura do quiz
   // Variaveis
-  PlayerMax: Word; // Guarda o numero maximo de ClientID
+  MaxPlayer: Word; // Guarda o numero maximo de ClientID
   ListCMD: TstringList; // Guarda os comandos e chats do jogo
   PlayerChat: TstringList; // Guarda todos os chats dos jogadores
   PacketLast: TstringList; // Guarda os comandos e chats do jogo
@@ -64,6 +64,7 @@ Var
   JsonLangDB: tJsonLangDB;
   LogDB: Tlog;
   BaseStatus: TJsonStatus;
+  SvClosed: Boolean;
 
 Type
   ArrayName = array of Byte;

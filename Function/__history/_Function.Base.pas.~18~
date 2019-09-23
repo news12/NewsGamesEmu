@@ -6,8 +6,7 @@ Uses
   System.SysUtils,
   Vcl.StdCtrls,
   Base.LoadConfig,
-  Form.Main,
-  Base.Struct;
+  Form.Main;
 
 Type
   TFunction = Class
@@ -24,7 +23,6 @@ Type
     class Function DateHourLabel(vLabel: TLabel): String;
     class Procedure CarregaJson;
     class function ByteToHex(InByte: byte): String;
-    class function GetClientID(H: Cardinal): Word;
     Destructor Destroy; override;
 
   End;
@@ -39,24 +37,8 @@ begin
   LoadConfig := TLoadConfig.Create;
 end;
 
-// pega o id do cliente no Handle do Socket
-class function TFunction.GetClientID(H: Cardinal): Word;
-var
-  I: Word;
-begin
-  Result := 0;
-  for I := 1 to MaxPlayer do
-  begin
-    if Client[I].Handle = H then
-    begin
-      Result := I;
-      break;
-    end;
-  end;
-end;
-
 /// /Faz do byte uma String[Hexadecimal]
-class function TFunction.ByteToHex(InByte: byte): String;
+class function ByteToHex(InByte: byte): String;
 const
   Digits: array [0 .. 15] of Char = '0123456789ABCDEF';
 begin

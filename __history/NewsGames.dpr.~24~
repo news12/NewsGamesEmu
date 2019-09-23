@@ -10,7 +10,7 @@ uses
   Base.Color in 'Base\Base.Color.pas',
   Base.GetConexao in 'Base\Base.GetConexao.pas',
   Base.cSQL in 'Base\Base.cSQL.pas',
-  Base.Cryptacao in 'Base\Base.Cryptacao.pas',
+  Base.Crypt in 'Base\Base.Crypt.pas',
   Base.System.Json.Helper in 'Base\Base.System.Json.Helper.pas',
   Base.System.JsonFiles in 'Base\Base.System.JsonFiles.pas',
   Base.Key in 'Base\Base.Key.pas',
@@ -19,14 +19,17 @@ uses
   Log.DB in 'Log\Log.DB.pas',
   Json.Conection in 'Json\Json.Conection.pas',
   Json.LangDB in 'Json\Json.LangDB.pas',
-  Base.Def in 'Base\Base.Def.pas';
+  Base.Def in 'Base\Base.Def.pas',
+  Json.Status in 'Json\Json.Status.pas',
+  _Function.Base in 'Function\_Function.Base.pas',
+  Thread.Generic in 'Thread\Thread.Generic.pas';
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TfMain, fMain);
   Application.CreateForm(TDM, DM);
+  Application.CreateForm(TfMain, fMain);
   Application.Run;
 end.

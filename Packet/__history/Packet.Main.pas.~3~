@@ -1,0 +1,23 @@
+unit Packet.Main;
+
+interface
+
+Uses
+  System.Win.ScktComp;
+
+Type
+  TPacketMain = Class
+  Private
+    { Class Private }
+
+  Public
+    { Class Public }
+
+  End;
+
+Var
+  sServer: TServerSocket;
+
+implementation
+
+end.

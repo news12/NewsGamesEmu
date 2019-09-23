@@ -22,7 +22,8 @@ uses
   Base.Def in 'Base\Base.Def.pas',
   Json.Status in 'Json\Json.Status.pas',
   _Function.Base in 'Function\_Function.Base.pas',
-  Thread.Generic in 'Thread\Thread.Generic.pas';
+  Thread.Generic in 'Thread\Thread.Generic.pas',
+  Packet.Main in 'Packet\Packet.Main.pas';
 
 {$R *.res}
 

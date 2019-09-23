@@ -1,0 +1,36 @@
+unit Packet.Main;
+
+interface
+
+Uses
+  System.Win.ScktComp;
+
+Type
+  TPacketMain = Class
+  Private
+    { Class Private }
+
+  Public
+    { Class Public }
+    class procedure SendPacket(pClientID: Word; pSize: Word);
+    class procedure GetPacket(Sender: TObject; Socket: TCustomWinSocket);
+
+  End;
+
+Var
+  sServer: TServerSocket;
+
+implementation
+
+class procedure TPacketMain.SendPacket(pClientID: Word; pSize: Word);
+begin
+  //
+end;
+
+class procedure TPacketMain.GetPacket(Sender: TObject;
+  Socket: TCustomWinSocket);
+begin
+//
+end;
+
+end.
