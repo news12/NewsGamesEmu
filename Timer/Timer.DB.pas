@@ -1,0 +1,81 @@
+unit Timer.DB;
+
+interface
+
+Uses
+  System.Classes,
+  System.SysUtils,
+  FireDAC.Comp.Client,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Dialogs,
+  Vcl.ExtCtrls,
+  Base.Struct,
+  Form.Modulo,
+  DB.Conect,
+  _Function.Base;
+
+Type
+  TTimerDB = Class
+  Private
+    { Class Private }
+    class procedure StartTimers(Sender: TObject);
+
+  Public
+    { Class Public }
+    constructor create;
+    class procedure StartDBTimer(Sender: TObject);
+    destructor destroy; override;
+
+  End;
+
+implementation
+
+Uses
+  Form.Main;
+
+Var
+  TimerDB: TTimer;
+  FunctionBase: TFunction;
+  DBConect: TDBConect;
+
+constructor TTimerDB.create;
+begin
+  TimerDB := TTimer.create(nil);
+  FunctionBase := TFunction.create;
+  DBConect := TDBConect.create;
+end;
+
+class procedure TTimerDB.StartTimers(Sender: TObject);
+var
+  Started: Boolean;
+begin
+  if Not Started then
+  begin
+    Started := True;
+
+    FunctionBase.CarregaJson;
+    DBConect.ConectaDB(fMain.rStatus);
+
+    Started := False;
+  end;
+end;
+
+class procedure TTimerDB.StartDBTimer(Sender: TObject);
+begin
+
+    TimerDB.Enabled := True;
+    TimerDB.Interval := FiveSec;
+    TimerDB.OnTimer := StartTimers;
+
+end;
+
+destructor TTimerDB.destroy;
+begin
+  TimerDB.Free;
+  FunctionBase.Free;
+  DBConect.Free;
+  inherited;
+end;
+
+end.

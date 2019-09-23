@@ -1,0 +1,39 @@
+unit ConectDB;
+
+interface
+
+Uses
+  Vcl.ComCtrls,
+  cColor,
+  FireDAC.Comp.Client,
+  cGetConexao,
+  Winapi.Messages,
+  Vcl.Dialogs,
+  System.JSON,
+  System.JSON.Helper,
+  System.JsonFiles,
+  System.SysUtils,
+  System.Win.ScktComp,
+  Winapi.Windows,
+  uKey;
+
+Type
+  TConectDB = Class
+  Protected
+    { Protected class }
+  Private
+    { Private Class }
+  Public
+    { Public Class }
+    procedure pLog(Log: TRichEdit; Msg: String; Tipo: Integer);
+
+    function SelectTable(pTable: String; pFields: String = '';
+      pOrder: String = ''; pSQL: String = ''; pRename: String = ''): TFDQuery;
+
+    function UpdateTable(tTabela: String; tCampo: String; tValor: String;
+      SqlExtra: String = ''): TFDQuery;
+  End;
+
+implementation
+
+end.

@@ -1,0 +1,20 @@
+unit Log.Log;
+
+interface
+
+Type
+  tLog = Class
+  Protected
+    { Protected Class }
+
+  Private
+    { Private Class }
+
+  Public
+    { Public Class }
+
+  End;
+
+implementation
+
+end.

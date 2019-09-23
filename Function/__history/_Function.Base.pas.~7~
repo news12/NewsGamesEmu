@@ -1,0 +1,35 @@
+unit _Function.Base;
+
+interface
+
+Uses
+  System.SysUtils,
+  Vcl.StdCtrls;
+
+Type
+  TFunction = Class
+  Protected
+    { Class Protected }
+
+  Private
+    { Class Private }
+
+  Public
+    { Class Public }
+    class Function DateHourLabel(vLabel: TLabel): String;
+
+  End;
+
+implementation
+
+class Function TFunction.DateHourLabel(vLabel: TLabel): String;
+var
+  Data: TDate;
+  Hora: TTime;
+begin
+  Data := FormatDateTime('dd/mm/yyyy', Date);
+  Hora := FormatDateTime('H:mm', Time);
+  vLabel.Caption := Data + ' - ' + Hora;
+end;
+
+end.

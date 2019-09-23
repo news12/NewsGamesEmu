@@ -1,0 +1,25 @@
+unit Json.LangDB;
+
+interface
+
+Uses
+  System.SysUtils, Vcl.Forms;
+
+{$REGION '#Lang Conexão com o DB'}
+
+Type
+  tACCLogin = Record
+    NotAccount: String;
+    NumericError: String;
+    LoggedIn: String;
+    Blocked: String;
+    Baned: String;
+    ResetPass: String;
+    NotFound: String;
+    CharExists: String;
+  End;
+{$ENDREGION}
+
+implementation
+
+end.

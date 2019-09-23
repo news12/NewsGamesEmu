@@ -1,0 +1,81 @@
+unit Thread.Main;
+
+interface
+
+Uses
+  System.Classes,
+  FireDAC.Comp.Client,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Dialogs,
+  Vcl.ExtCtrls,
+  Base.Struct,
+  Form.Modulo,
+  Thread.DB,
+  DB.Conect,
+  Thread.Generic,
+  _Function.Base;
+
+Type
+  tThreadMain = class(TThread)
+  protected
+    procedure Execute; override;
+
+  private
+    { Private class }
+
+  public
+    { Public class }
+    constructor Create;
+    destructor Destroy; override;
+  end;
+
+Implementation
+
+Uses
+  Form.Main;
+
+var
+  ThreadDB: tThreadDB;
+  ThreadGeneric: TThreadGeneric;
+  FunctionBase: Tfunction;
+  DBConect: TDBConect;
+
+constructor tThreadMain.Create;
+begin
+
+  ThreadDB := tThreadDB.Create;
+  ThreadGeneric := TThreadGeneric.Create;
+  FunctionBase := Tfunction.Create;
+  DBConect := TDBConect.Create;
+  inherited Create(True);
+end;
+
+procedure tThreadMain.Execute;
+begin
+  inherited;
+  // while Not Terminated do
+  // begin
+  // if Not ThreadDB.Started then
+  // ThreadDB.Start;
+
+  if Not ThreadGeneric.Started then
+    ThreadGeneric.Start;
+
+  FunctionBase.CarregaJson;
+  DBConect.ConectaDB(fMain.rStatus);
+  Sleep(OneMin);
+  // end;
+
+  Terminate;
+
+end;
+
+destructor tThreadMain.Destroy;
+begin
+  FunctionBase.Free;
+  DBConect.Free;
+  inherited;
+end;
+
+end.

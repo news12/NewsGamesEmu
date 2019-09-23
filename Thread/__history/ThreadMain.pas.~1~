@@ -1,0 +1,59 @@
+unit uThreadMain;
+
+interface
+
+Uses
+  System.Classes,
+  FireDAC.Comp.Client,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Dialogs,
+  Vcl.ExtCtrls,
+  uStruct,
+  uDM,
+  uFunc,
+  uThreadDB;
+
+Type
+  tThreadMain = class(TThread)
+  protected
+    procedure Execute; override;
+
+  private
+    { Private class }
+
+  public
+    { Public class }
+    constructor Create;
+    destructor Destroy; override;
+  end;
+
+Implementation
+
+var
+  ThreadDB: tThreadDB;
+
+constructor tThreadMain.Create;
+begin
+
+  ThreadDB := tThreadDB.Create;
+  inherited Create(True);
+end;
+
+procedure tThreadMain.Execute;
+begin
+  inherited;
+  while Not Terminated do
+  begin
+    if Not ThreadDB.Started then
+      ThreadDB.Start;
+    Sleep(60000);
+  end;
+end;
+
+destructor tThreadMain.Destroy;
+begin
+
+end;
+
+end.

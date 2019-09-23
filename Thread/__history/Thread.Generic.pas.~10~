@@ -1,0 +1,47 @@
+unit Thread.Generic;
+
+interface
+
+uses
+  System.Classes,
+  Form.Main,
+  _Function.Base;
+
+type
+  TThreadGeneric = class(TThread)
+  private
+    { Private declarations }
+  protected
+    procedure Execute; override;
+
+  public
+    constructor Create;
+    destructor Destroy; override;
+  end;
+
+implementation
+
+{ TThreadGeneric }
+
+Var
+  BaseFunction: TFunction;
+
+constructor TThreadGeneric.Create;
+begin
+  BaseFunction := TFunction.Create;
+  inherited Create(True);
+end;
+
+procedure TThreadGeneric.Execute;
+begin
+  inherited;
+
+end;
+
+destructor TThreadGeneric.Destroy;
+begin
+
+  inherited;
+end;
+
+end.

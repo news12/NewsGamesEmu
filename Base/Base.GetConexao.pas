@@ -1,0 +1,25 @@
+unit Base.GetConexao;
+
+interface
+
+uses
+  Data.SqlExpr, FireDAC.Comp.Client;
+
+type
+  TGetConexao = class
+  public
+    class function Conexao: TFDConnection;
+  end;
+
+implementation
+
+uses Form.Modulo;
+
+{ TGetConexao }
+
+class function TGetConexao.Conexao: TFDConnection;
+begin
+  result := DM.Connection;
+end;
+
+end.

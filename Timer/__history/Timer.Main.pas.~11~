@@ -1,0 +1,63 @@
+unit Timer.Main;
+
+interface
+
+Uses
+  System.Classes,
+  System.SysUtils,
+  FireDAC.Comp.Client,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Dialogs,
+  Vcl.ExtCtrls,
+  Base.Struct,
+  Form.Modulo,
+  DB.Conect,
+  _Function.Base;
+
+Type
+  TTimerMain = Class
+  Protected
+    { Class Protected }
+
+  Private
+    { Class Private }
+
+  Public
+    { Class Public }
+    constructor create;
+    procedure StartTimers;
+    class procedure StartMainTimer;
+    destructor destroy; override;
+
+  End;
+
+implementation
+
+Var
+  TimerMain: TTimer;
+
+constructor TTimerMain.create;
+begin
+  TimerMain := TTimer.create(Nil);
+end;
+
+procedure TTimerMain.StartTimers;
+begin
+  //
+end;
+
+class procedure TTimerMain.StartMainTimer;
+begin
+  TimerMain.Enabled := True;
+  TimerMain.Interval := OneMin;
+  TimerMain.OnTimer := StartTimers;
+end;
+
+destructor TTimerMain.destroy;
+begin
+  TimerMain.Free;
+  inherited;
+end;
+
+end.

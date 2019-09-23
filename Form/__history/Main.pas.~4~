@@ -1,0 +1,30 @@
+unit Main;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Buttons;
+
+type
+  TfMain = class(TForm)
+    panelTop: TPanel;
+    panelRigth: TPanel;
+    panelMain: TPanel;
+    panelLeft: TPanel;
+    panelBot: TPanel;
+    btnClose: TSpeedButton;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  fMain: TfMain;
+
+implementation
+
+{$R *.dfm}
+
+end.

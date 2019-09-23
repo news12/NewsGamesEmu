@@ -1,0 +1,94 @@
+unit Thread.DB;
+
+interface
+
+Uses
+  System.Classes,
+  FireDAC.Comp.Client,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Dialogs,
+  Vcl.ExtCtrls
+  // uStruct,
+  // uDM,
+  // uFunc
+    ;
+
+Type
+  tThreadDB = class(TThread)
+  protected
+    procedure Execute; override;
+
+  private
+    procedure LogOutAcc;
+
+  public
+    constructor Create;
+    destructor Destroy; override;
+  end;
+
+implementation
+
+Uses
+  Form.Modulo,
+  form.Main,
+  Base.Struct,
+  DB.Conect;
+
+Var
+  Conection: TConectDB;
+
+constructor tThreadDB.Create;
+begin
+  Conection := TConectDB.Create;
+  inherited Create(True);
+end;
+
+procedure tThreadDB.LogOutAcc;
+var
+  Verific: Boolean;
+  vQuery: TFDQuery;
+  vSQL: String;
+  pName: String;
+begin
+
+  vSQL := 'WHERE STATUS = 0 AND LOGOUT = 1';
+  vQuery := Conection.SelectTable(TableAccount, '*', '', vSQL);
+
+  if Not vQuery.IsEmpty then
+  begin
+    pName := vQuery.FieldByName('login').AsString;
+    vQuery.Edit;
+    vQuery.FieldByName('LOGOUT').AsInteger := 0;
+    vQuery.Post;
+    DM.Connection.Commit;
+    // atualizar componente vcl
+    Synchronize(
+      procedure
+      begin
+        pLog(form.rStatus, 'o Jogador :[' + pName +
+          '] desconectou do jogo!!!', 2);
+      end);
+
+  end;
+  vQuery.Free;
+end;
+
+procedure tThreadDB.Execute;
+begin
+  inherited;
+  While not Terminated do
+  begin
+    LogOutAcc;
+    Sleep(1000);
+
+  end;
+  // Nunca vai chegar aqui, WaitFor em loop
+end;
+
+destructor tThreadDB.Destroy;
+begin
+
+end;
+
+end.

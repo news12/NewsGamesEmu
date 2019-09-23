@@ -1,0 +1,75 @@
+unit Json.Read;
+
+interface
+
+Uses
+  System.SysUtils, Vcl.Forms;
+
+type
+
+  TConexao = class
+  private
+    { private declarations }
+    FIP: String;
+    FDB: String;
+    FUSER: String;
+    FSENHA: String;
+    FPORTA: Integer;
+    FPORTADB: Integer;
+    FPORTACLI: Integer;
+    FIPDB: String;
+    FIPSERVER: String;
+  protected
+    { protected declarations }
+  public
+    { public declarations }
+    ConfigFolder: String;
+    LangFolder: String;
+    FolderGame : String;
+
+    Constructor Create; // declaração do metodo construtor
+
+    property IP: String read FIP write FIP;
+
+    property DB: String read FDB write FDB;
+
+    property USER: String read FUSER write FUSER;
+
+    property SENHA: String read FSENHA write FSENHA;
+
+    property PORTA: Integer read FPORTA write FPORTA;
+
+    property PORTADB: Integer read FPORTADB write FPORTADB;
+
+    property PORTACLI: Integer read FPORTACLI write FPORTACLI;
+
+    property IPDB: String read FIPDB write FIPDB;
+
+    property IPSERVER: String read FIPSERVER write FIPSERVER;
+
+    Destructor Destroy; Override; // declaração do metodo destrutor
+  published
+    { published declarations }
+  end;
+
+implementation
+
+{ TItem }
+
+constructor TConexao.Create;
+begin
+  ConfigFolder := ExtractFilePath(Application.ExeName) + 'Config\';
+  LangFolder := ExtractFilePath(Application.ExeName) + 'Lang\';
+  FolderGame := ExtractFilePath(Application.ExeName);
+end;
+
+destructor TConexao.Destroy;
+begin
+
+  inherited;
+
+  ConfigFolder := '';
+  LangFolder := '';
+end;
+
+end.

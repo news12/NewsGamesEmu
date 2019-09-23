@@ -1,0 +1,36 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{EA6375BD-16C7-4A32-851B-630C9E14052A}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="NewsGames.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="NewsGames">
+        <MSBuild Projects="NewsGames.dproj"/>
+    </Target>
+    <Target Name="NewsGames:Clean">
+        <MSBuild Projects="NewsGames.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NewsGames:Make">
+        <MSBuild Projects="NewsGames.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="NewsGames"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="NewsGames:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="NewsGames:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

@@ -1,0 +1,102 @@
+object fMain: TfMain
+  Left = 0
+  Top = 0
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsToolWindow
+  Caption = 'Emulator News Games'
+  ClientHeight = 465
+  ClientWidth = 731
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poScreenCenter
+  PixelsPerInch = 96
+  TextHeight = 13
+  object panelTop: TPanel
+    Left = 0
+    Top = 0
+    Width = 731
+    Height = 41
+    Align = alTop
+    Caption = 'panelTop'
+    Color = clSilver
+    ParentBackground = False
+    ShowCaption = False
+    TabOrder = 0
+    ExplicitWidth = 721
+  end
+  object panelRigth: TPanel
+    Left = 706
+    Top = 41
+    Width = 25
+    Height = 389
+    Align = alRight
+    Caption = 'panelRigth'
+    Color = 4934475
+    ParentBackground = False
+    ShowCaption = False
+    TabOrder = 1
+    ExplicitLeft = 696
+    ExplicitHeight = 373
+  end
+  object panelMain: TPanel
+    Left = 33
+    Top = 41
+    Width = 673
+    Height = 389
+    Align = alClient
+    Caption = 'panelMain'
+    ShowCaption = False
+    TabOrder = 2
+    ExplicitLeft = 304
+    ExplicitTop = 304
+    ExplicitWidth = 185
+    ExplicitHeight = 41
+  end
+  object panelLeft: TPanel
+    Left = 0
+    Top = 41
+    Width = 33
+    Height = 389
+    Align = alLeft
+    Caption = 'panelLeft'
+    Color = 4934475
+    ParentBackground = False
+    ShowCaption = False
+    TabOrder = 3
+    ExplicitHeight = 373
+  end
+  object panelBot: TPanel
+    Left = 0
+    Top = 430
+    Width = 731
+    Height = 35
+    Align = alBottom
+    Caption = 'panelBot'
+    Color = clSilver
+    ParentBackground = False
+    ShowCaption = False
+    TabOrder = 4
+    ExplicitTop = 420
+    ExplicitWidth = 721
+    object btnClose: TSpeedButton
+      Left = 656
+      Top = 1
+      Width = 74
+      Height = 33
+      Align = alRight
+      Caption = 'Sair'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = 4934475
+      Font.Height = -12
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+      OnClick = btnCloseClick
+    end
+  end
+end
