@@ -23,7 +23,9 @@ uses
   Json.Status in 'Json\Json.Status.pas',
   _Function.Base in 'Function\_Function.Base.pas',
   Thread.Generic in 'Thread\Thread.Generic.pas',
-  Packet.Main in 'Packet\Packet.Main.pas';
+  Packet.Main in 'Packet\Packet.Main.pas',
+  _Function.DC in 'Function\_Function.DC.pas',
+  _Function.BAN in 'Function\_Function.BAN.pas';
 
 {$R *.res}
 

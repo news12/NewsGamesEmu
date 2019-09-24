@@ -13,6 +13,7 @@ Uses
 
 Type
   TPacketMain = Class
+
   Private
     { Class Private }
 
@@ -26,9 +27,6 @@ Type
     destructor destroy; override;
 
   End;
-
-Var
-  sServer: TServerSocket;
 
 implementation
 
@@ -96,7 +94,7 @@ begin
         if CompareMem(@Header, @Client[clientid].LastHeader, sizeof(Header))
         then
         begin
-          BAN(clientid, 'Simulação de pacotes ! ');
+          // BAN(clientid, 'Simulação de pacotes ! ');
         end
         else
         begin
@@ -105,7 +103,7 @@ begin
           begin
             if Header.Code <> $3A0 then
             begin
-              PacketControl(clientid, Header.Code, size);
+              // PacketControl(clientid, Header.Code, size);
             end;
           end
           else
@@ -132,9 +130,9 @@ begin
             end;
           end;
           // Servidor Full
-          if clientid >= (PlayerMax - 1) then
+          if clientid >= (MaxPlayer - 1) then
           begin
-            Notice(clientid, ' Use outro canal pois este está cheio ! ');
+            // Notice(clientid, ' Use outro canal pois este está cheio ! ');
             Socket.Close;
           end
           else
@@ -142,8 +140,8 @@ begin
             // Servidor indisponivel
             if SvClosed then
             begin
-              Notice(clientid,
-                ' Servidor fechado pela administração. Utilize outro');
+              // Notice(clientid,
+              // ' Servidor fechado pela administração. Utilize outro');
               Socket.Close;
             end
             else
@@ -154,7 +152,7 @@ begin
               Move(pLogin.ID, pLoginDB.ID, 12);
               Move(pLogin.Pass, pLoginDB.Pass, 10);
               Move(pLoginDB, sEnvDB, sizeof(pLoginDB));
-              sDB.Socket.SendBuf(sEnvDB, sizeof(pLoginDB));
+              // sDB.Socket.SendBuf(sEnvDB, sizeof(pLoginDB));
             end; // servidor indisponivel
           end; // servidor full
 
@@ -168,7 +166,7 @@ begin
 
 end;
 
-destructor destroy;
+destructor TPacketMain.destroy;
 begin
   BaseFunction.Free;
   inherited;

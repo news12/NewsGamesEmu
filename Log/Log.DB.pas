@@ -53,7 +53,9 @@ begin
     2: // Notificaton
       Cor := AzulC;
     3: // Normal
-      Cor := Branco
+      Cor := Branco;
+    4:
+      Cor := Laranja
   else
     Cor := Cinza;
   end;
@@ -72,8 +74,8 @@ begin
     Except
       On E: Exception do
       begin
-      //  DBLog(FMain.rStatus, E.Message, 1);
-      exit;
+        // DBLog(FMain.rStatus, E.Message, 1);
+        exit;
       end;
     End;
   end;

@@ -1,0 +1,40 @@
+unit _Function.BAN;
+
+interface
+
+Uses
+  Packet.Main,
+  Base.Struct;
+
+Type
+  TFunctionBAN = Class
+  Private
+
+  Public
+    constructor create;
+
+    class procedure DC(ClientID: Word);
+
+    destructor destroy; override;
+  End;
+
+implementation
+
+constructor TFunctionBAN.create;
+begin
+
+end;
+
+class procedure TFunctionBAN.DC;
+begin
+  sServer.Socket.Connections[Client[ClientID].Conect].Close;
+
+end;
+
+destructor TFunctionBAN.destroy;
+begin
+
+  inherited;
+end;
+
+end.

@@ -1,9 +1,0 @@
-unit Packet.Main;
-
-interface
-Uses
-System.Win.ScktComp;
-
-implementation
-
-end.

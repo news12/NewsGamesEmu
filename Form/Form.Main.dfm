@@ -83,10 +83,11 @@ object fMain: TfMain
       ExplicitHeight = 28
     end
     object groupTime: TGroupBox
-      Left = 8
+      Left = 1
       Top = 1
       Width = 185
-      Height = 30
+      Height = 33
+      Align = alLeft
       Caption = 'Server Timer:'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = 4934475
@@ -95,15 +96,15 @@ object fMain: TfMain
       Font.Style = []
       ParentFont = False
       TabOrder = 0
+      ExplicitLeft = 8
+      ExplicitHeight = 30
       object lblServerTimer: TLabel
-        Left = 2
+        Left = 33
         Top = 15
-        Width = 181
+        Width = 103
         Height = 13
-        Align = alClient
         Alignment = taCenter
         Caption = '00/00/0000 00:00:00'
-        ExplicitWidth = 103
       end
     end
   end
@@ -120,7 +121,7 @@ object fMain: TfMain
       Left = 1
       Top = 1
       Width = 699
-      Height = 272
+      Height = 312
       Align = alTop
       BevelInner = bvNone
       BevelOuter = bvNone
@@ -139,9 +140,9 @@ object fMain: TfMain
     end
     object rStatus2: TRichEdit
       Left = 1
-      Top = 273
+      Top = 313
       Width = 699
-      Height = 156
+      Height = 116
       Align = alClient
       BevelInner = bvNone
       BevelOuter = bvNone
@@ -155,6 +156,8 @@ object fMain: TfMain
       ParentFont = False
       TabOrder = 1
       Zoom = 100
+      ExplicitTop = 273
+      ExplicitHeight = 156
     end
   end
 end

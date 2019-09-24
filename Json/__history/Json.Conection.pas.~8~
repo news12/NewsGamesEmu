@@ -1,0 +1,119 @@
+unit Json.Conection;
+
+interface
+
+Uses
+  System.SysUtils,
+  Vcl.Forms,
+  Vcl.ComCtrls,
+  System.Json,
+  Base.System.Json.Helper,
+  Base.System.JsonFiles,
+  Log.DB,
+  Base.Struct;
+
+type
+
+  TjsonConect = class
+  private
+    { private declarations }
+    FIP: String;
+    FDB: String;
+    FUSER: String;
+    FSENHA: String;
+    FPORTA: Integer;
+    FPORTADB: Integer;
+    FPORTACLI: Integer;
+    FIPDB: String;
+    FIPSERVER: String;
+  protected
+    { protected declarations }
+  public
+    { public declarations }
+
+    Constructor Create; // declaração do metodo construtor
+
+    property IP: String read FIP write FIP;
+
+    property DB: String read FDB write FDB;
+
+    property USER: String read FUSER write FUSER;
+
+    property SENHA: String read FSENHA write FSENHA;
+
+    property PORTA: Integer read FPORTA write FPORTA;
+
+    property PORTADB: Integer read FPORTADB write FPORTADB;
+
+    property PORTACLI: Integer read FPORTACLI write FPORTACLI;
+
+    property IPDB: String read FIPDB write FIPDB;
+
+    property IPSERVER: String read FIPSERVER write FIPSERVER;
+
+    class procedure pLoadConection(nFile: string; Log: TRichEdit);
+
+    Destructor Destroy; Override; // declaração do metodo destrutor
+
+  end;
+
+implementation
+
+{ TjsonRead }
+Var
+  LogDB: TLog;
+
+constructor TjsonConect.Create;
+begin
+  ConfigFolder := ExtractFilePath(Application.ExeName) + 'Config\';
+  LangFolder := ExtractFilePath(Application.ExeName) + 'Lang\';
+  FolderGame := ExtractFilePath(Application.ExeName);
+  LogDB := TLog.Create;
+end;
+
+class procedure TjsonConect.pLoadConection(nFile: string; Log: TRichEdit);
+var
+  cFile: string;
+  jFile: TJsonFile;
+begin
+
+  cFile := ConfigFolder + nFile;
+  jFile := TJsonFile.Create(cFile);
+  try
+    DB := jFile.ReadString('MYSQL', 'DB', '');
+    USER := jFile.ReadString('MYSQL', 'USER', '');
+    SENHA := jFile.ReadString('MYSQL', 'SENHA', '');
+    PORTA := jFile.ReadInteger('MYSQL', 'PORTA', 0);
+    IP := jFile.ReadString('MYSQL', 'IP', '');
+    Log.Lines.Add('###################################');
+    Log.Lines.Add('DB:');
+    jFile.ReadSectionValues('DB', Log.Lines);
+    Log.Lines.Add('###################################');
+    Log.Lines.Add('SERVER:');
+    jFile.ReadSectionValues('SERVER', Log.Lines);
+    Log.Lines.Add('###################################');
+    PORTADB := jFile.ReadInteger('DB', 'PORT', 0);
+    IPDB := jFile.ReadString('DB', 'IP', '');
+    PORTACLI := jFile.ReadInteger('SERVER', 'PORT', 0);
+    IPSERVER := jFile.ReadString('SERVER', 'IP', '');
+    LogDB.DBLog(Log, 'Arquivo de Conexão carregado com sucesso!!!', 0);
+  except
+    on E: Exception do
+    begin
+      LogDB.DBLog(Log, E.Message +
+        ' verifica se tem dados informados de forma incorreta no arquivo de Conexão.',
+        1);
+    end;
+  end;
+  jFile.Free;
+end;
+
+destructor TjsonConect.Destroy;
+begin
+  ConfigFolder := '';
+  LangFolder := '';
+  LogDB.Free;
+  inherited;
+end;
+
+end.

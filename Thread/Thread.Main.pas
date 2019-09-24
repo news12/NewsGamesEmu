@@ -62,10 +62,11 @@ begin
 
     if Not ThreadGeneric.Started then
       ThreadGeneric.Start;
-  
+
     FunctionBase.CarregaJson;
     DBConect.ConectaDB(fMain.rStatus);
-    Sleep(ThirtySec);
+     FunctionBase.LoadSocket;
+    Sleep(FiveMin);
   end;
   // OnTerminate := Start;
 

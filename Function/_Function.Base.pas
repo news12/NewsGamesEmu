@@ -6,8 +6,9 @@ Uses
   System.SysUtils,
   Vcl.StdCtrls,
   Base.LoadConfig,
-  Form.Main,
-  Base.Struct;
+  Base.Struct,
+  System.Win.ScktComp,
+  Log.DB;
 
 Type
   TFunction = Class
@@ -25,18 +26,40 @@ Type
     class Procedure CarregaJson;
     class function ByteToHex(InByte: byte): String;
     class function GetClientID(H: Cardinal): Word;
+    class procedure LoadSocket;
     Destructor Destroy; override;
 
   End;
 
 implementation
 
+Uses
+  Form.Main;
+
 Var
   LoadConfig: TLoadConfig;
+  LogDB: TLog;
 
 Constructor TFunction.Create;
 begin
   LoadConfig := TLoadConfig.Create;
+  LogDB := TLog.Create;
+  sServer := TServerSocket.Create(Nil);
+end;
+
+class procedure TFunction.LoadSocket;
+begin
+  try
+    sServer.Port := JsonConection.PORTA_SERVER;
+    sServer.Active := True;
+    LogDB.DBLog(fMain.rStatus, 'Server Started Success!!!', 0);
+    LogDB.DBLog(fMain.rStatus, 'Porta: [' + IntToStr(JsonConection.PORTA_SERVER)
+      + ']', 2);
+    LogDB.DBLog(fMain.rStatus, 'IP: [' + JsonConection.IPSERVER + ']', 2);
+  Except
+    LogDB.DBLog(fMain.rStatus, 'Erro ao abrir conexão de sockets: [' +
+      IntToStr(JsonConection.PORTA_SERVER) + ']', 1);
+  end;
 end;
 
 // pega o id do cliente no Handle do Socket
@@ -82,6 +105,8 @@ end;
 Destructor TFunction.Destroy;
 begin
   LoadConfig.Free;
+  LogDB.Free;
+  sServer.Free;
   inherited;
 end;
 

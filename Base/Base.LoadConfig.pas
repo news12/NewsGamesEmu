@@ -40,13 +40,20 @@ Var
 
 implementation
 
-// Var
-// cFile: string;
-// jFile: TJsonFile;
-// JsonConection: TjsonConect;
-// JsonLangDB: tJsonLangDB;
-// LogDB: Tlog;
-// BaseStatus: TJsonStatus;
+constructor TLoadConfig.Create;
+Var
+  I: Integer;
+begin
+
+  JsonConection := TjsonConect.Create;
+  JsonLangDB := tJsonLangDB.Create;
+  LogDB := Tlog.Create;
+  for I := 0 to cBase do
+  begin
+    BaseClass[I] := TJsonStatus.Create;
+  end;
+
+end;
 
 function TLoadConfig.LoadConection(Log: TRichEdit): Boolean;
 begin
@@ -56,8 +63,10 @@ begin
     JsonConection.DB := jFile.ReadString('MYSQL', 'DB', '');
     JsonConection.USER := jFile.ReadString('MYSQL', 'USER', '');
     JsonConection.SENHA := jFile.ReadString('MYSQL', 'SENHA', '');
-    JsonConection.PORTA := jFile.ReadInteger('MYSQL', 'PORTA', 0);
+    JsonConection.PORTA_MYSQL := jFile.ReadInteger('MYSQL', 'PORT', 0);
     JsonConection.IP := jFile.ReadString('MYSQL', 'IP', '');
+    JsonConection.PORTA_SERVER := jFile.ReadInteger('SERVER', 'PORT', 0);
+    JsonConection.IPSERVER := jFile.ReadString('SERVER', 'IP', '');
     Log.Clear;
     Log.SelAttributes.Color := Laranja;
     Log.Lines.Add
@@ -73,7 +82,7 @@ begin
   except
     on E: Exception do
     begin
-     LogDB.DBLog(Log, E.Message, 1);
+      LogDB.DBLog(Log, E.Message, 1);
       LogDB.DBLog(Log, FileConexao +
         '...........................................................Falha.', 1);
       Result := False;
@@ -157,7 +166,7 @@ begin
     on E: Exception do
     begin
       LogDB.DBLog(Log, E.Message, 1);
-       LogDB.DBLog(Log, FileBaseStatus +
+      LogDB.DBLog(Log, FileBaseStatus +
         '...........................................................Falha.', 1);
       Result := False;
     end;
@@ -172,27 +181,11 @@ begin
   LoadBaseStatus(Log);
 end;
 
-constructor TLoadConfig.Create;
-Var
-  I: Integer;
-begin
-
-  JsonConection := TjsonConect.Create;
-  JsonLangDB := tJsonLangDB.Create;
-  LogDB := Tlog.Create;
-  for I := 0 to cBase do
-  begin
-    BaseClass[I] := TJsonStatus.Create;
-  end;
-
-end;
-
 destructor TLoadConfig.Destroy;
 Var
   I: Integer;
 begin
 
-  inherited;
   JsonConection.Free;
   JsonLangDB.Free;
   LogDB.Free;
@@ -200,7 +193,7 @@ begin
   begin
     BaseClass[I].Free;
   end;
-
+  inherited;
 end;
 
 end.

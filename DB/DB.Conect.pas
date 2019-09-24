@@ -51,7 +51,7 @@ begin
       // Params.Clear;
       Params.Values['Database'] := JsonConection.DB;
       Params.Values['DriverID'] := 'MySQL';
-      Params.Values['Port'] := IntToStr(JsonConection.PORTA);
+      Params.Values['Port'] := IntToStr(JsonConection.PORTA_MYSQL);
       Params.Values['Server'] := JsonConection.IP;
       // Params.Values['HostName']:= Conexao.IP;
       Params.Values['UserName'] := JsonConection.User;

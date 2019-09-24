@@ -14,10 +14,8 @@ type
     FDB: String;
     FUSER: String;
     FSENHA: String;
-    FPORTA: Integer;
-    FPORTADB: Integer;
-    FPORTACLI: Integer;
-    FIPDB: String;
+    FPORTA_MYSQL: Integer;
+    FPORTA_SERVER: Integer;
     FIPSERVER: String;
   protected
     { protected declarations }
@@ -37,13 +35,9 @@ type
 
     property SENHA: String read FSENHA write FSENHA;
 
-    property PORTA: Integer read FPORTA write FPORTA;
+    property PORTA_MYSQL: Integer read FPORTA_MYSQL write FPORTA_MYSQL;
 
-    property PORTADB: Integer read FPORTADB write FPORTADB;
-
-    property PORTACLI: Integer read FPORTACLI write FPORTACLI;
-
-    property IPDB: String read FIPDB write FIPDB;
+    property PORTA_SERVER: Integer read FPORTA_SERVER write FPORTA_SERVER;
 
     property IPSERVER: String read FIPSERVER write FIPSERVER;
 

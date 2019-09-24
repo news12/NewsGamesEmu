@@ -1,0 +1,18 @@
+unit _Function.DC;
+
+interface
+
+Uses
+  Packet.Main;
+
+Type
+  TFunctionDC = Class
+  Private
+
+  Public
+
+  End;
+
+implementation
+
+end.

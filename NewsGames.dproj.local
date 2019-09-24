@@ -6,21 +6,21 @@
     <Transaction>2019/09/21 21:57:18.000.149,C:\Users\uell1\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Form\Main.pas</Transaction>
     <Transaction>2019/09/21 21:57:18.000.149,C:\Users\uell1\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.dfm=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Form\Main.dfm</Transaction>
     <Transaction>2019/09/21 21:57:31.000.161,C:\Users\uell1\OneDrive\Documentos\Embarcadero\Studio\Projects\Project1.dproj=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\NewsGames.dproj</Transaction>
-    <Transaction>2019/09/21 22:21:41.000.373,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Thread\uThreadMain.pas</Transaction>
     <Transaction>2019/09/21 22:21:41.000.350,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Thread\uThreadDB.pas</Transaction>
+    <Transaction>2019/09/21 22:21:41.000.373,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Thread\uThreadMain.pas</Transaction>
     <Transaction>2019/09/21 22:23:05.000.606,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Unit1.pas</Transaction>
-    <Transaction>2019/09/21 22:23:32.000.110,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Unit1.pas=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Form\Modulopas.pas</Transaction>
     <Transaction>2019/09/21 22:23:32.000.110,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Unit1.dfm=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Form\Modulopas.dfm</Transaction>
+    <Transaction>2019/09/21 22:23:32.000.110,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Unit1.pas=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Form\Modulopas.pas</Transaction>
     <Transaction>2019/09/21 22:23:57.000.493,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Form\Modulopas.dfm=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Form\Modulo.dfm</Transaction>
     <Transaction>2019/09/21 22:23:57.000.493,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Form\Modulopas.pas=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Form\Modulo.pas</Transaction>
     <Transaction>2019/09/21 22:26:56.000.062,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Unit1.pas</Transaction>
     <Transaction>2019/09/21 22:27:37.000.328,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Unit1.pas=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\DB\ConectDB.pas</Transaction>
-    <Transaction>2019/09/21 22:28:34.000.396,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Base\cColor.pas</Transaction>
     <Transaction>2019/09/21 22:28:34.000.496,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Base\System.Json.Helper.pas</Transaction>
+    <Transaction>2019/09/21 22:28:34.000.560,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Base\uKey.pas</Transaction>
+    <Transaction>2019/09/21 22:28:34.000.420,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Base\cGetConexao.pas</Transaction>
     <Transaction>2019/09/21 22:28:34.000.446,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Base\cSQL.pas</Transaction>
     <Transaction>2019/09/21 22:28:34.000.470,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Base\fCryptacao.pas</Transaction>
-    <Transaction>2019/09/21 22:28:34.000.420,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Base\cGetConexao.pas</Transaction>
-    <Transaction>2019/09/21 22:28:34.000.560,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Base\uKey.pas</Transaction>
+    <Transaction>2019/09/21 22:28:34.000.396,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Base\cColor.pas</Transaction>
     <Transaction>2019/09/21 22:28:34.000.533,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Base\System.JsonFiles.pas</Transaction>
     <Transaction>2019/09/21 22:39:11.000.696,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Base\uStruct.pas</Transaction>
     <Transaction>2019/09/21 22:39:11.000.669,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Base\uLoadConfig.pas</Transaction>
@@ -43,10 +43,10 @@
     <Transaction>2019/09/21 22:42:24.000.745,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Thread\ThreadMain.pas=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Thread\Thread.Main.pas</Transaction>
     <Transaction>2019/09/21 22:42:28.000.549,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Thread\ThreadDB.pas=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Thread\Thread.DB.pas</Transaction>
     <Transaction>2019/09/21 22:43:01.000.730,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\DB\ConectDB.pas=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\DB\DB.Conect.pas</Transaction>
-    <Transaction>2019/09/21 22:43:14.000.401,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Form\Main.dfm=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Form\Form.Main.dfm</Transaction>
     <Transaction>2019/09/21 22:43:14.000.401,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Form\Main.pas=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Form\Form.Main.pas</Transaction>
-    <Transaction>2019/09/21 22:43:20.000.993,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Form\Modulo.dfm=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Form\Form.Modulo.dfm</Transaction>
+    <Transaction>2019/09/21 22:43:14.000.401,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Form\Main.dfm=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Form\Form.Main.dfm</Transaction>
     <Transaction>2019/09/21 22:43:20.000.993,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Form\Modulo.pas=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Form\Form.Modulo.pas</Transaction>
+    <Transaction>2019/09/21 22:43:20.000.993,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Form\Modulo.dfm=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Form\Form.Modulo.dfm</Transaction>
     <Transaction>2019/09/21 22:50:12.000.937,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Unit1.pas</Transaction>
     <Transaction>2019/09/21 22:50:38.000.355,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Unit1.pas=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Log\Log.Log.pas</Transaction>
     <Transaction>2019/09/21 22:59:27.000.071,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Log\Log.Log.pas=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Log\Log.DB.pas</Transaction>
@@ -75,6 +75,10 @@
     <Transaction>2019/09/23 13:27:45.226,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Unit1.pas</Transaction>
     <Transaction>2019/09/23 13:28:13.083,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Packet\Packet.Send.pas=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Unit1.pas</Transaction>
     <Transaction>2019/09/23 13:35:25.100,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Packet\Packet.Main.pas=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Packet\Packet.Send.pas</Transaction>
+    <Transaction>2019/09/23 18:37:21.270,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Unit1.pas</Transaction>
+    <Transaction>2019/09/23 18:37:59.236,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Function\_Function.DC.pas=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Unit1.pas</Transaction>
+    <Transaction>2019/09/23 19:16:44.127,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Unit1.pas</Transaction>
+    <Transaction>2019/09/23 19:17:30.207,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Function\_Function.BAN.pas=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Unit1.pas</Transaction>
   </Transactions>
 	<ProjectSortOrder AutoSort="0" SortType="0">
     <File Path="Base"/>
@@ -97,6 +101,8 @@
     <File Path="Form\Form.Modulo.dfm"/>
     <File Path="Function"/>
     <File Path="Function\_Function.Base.pas"/>
+    <File Path="Function\_Function.DC.pas"/>
+    <File Path="Function\_Function.BAN.pas"/>
     <File Path="Json"/>
     <File Path="Json\Json.Conection.pas"/>
     <File Path="Json\Json.LangDB.pas"/>
