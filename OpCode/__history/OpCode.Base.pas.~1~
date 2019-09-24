@@ -1,0 +1,14 @@
+unit OpCode.Numeric;
+
+interface
+ Type
+ OpCodeNumeric = class
+   Private
+
+   Public
+  Class procedure PacketControl(ClientID,OpCode:Word;size:Word);
+ end;
+
+implementation
+
+end.

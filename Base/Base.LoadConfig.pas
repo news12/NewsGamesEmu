@@ -6,7 +6,6 @@ Uses
   System.Classes,
   System.SysUtils,
   Vcl.Forms,
-  Base.Struct,
   System.JSON,
   Base.System.JSON.Helper,
   Base.System.JsonFiles,
@@ -40,6 +39,9 @@ Var
 
 implementation
 
+Uses
+ Base.Struct;
+
 constructor TLoadConfig.Create;
 Var
   I: Integer;
@@ -65,8 +67,24 @@ begin
     JsonConection.SENHA := jFile.ReadString('MYSQL', 'SENHA', '');
     JsonConection.PORTA_MYSQL := jFile.ReadInteger('MYSQL', 'PORT', 0);
     JsonConection.IP := jFile.ReadString('MYSQL', 'IP', '');
-    JsonConection.PORTA_SERVER := jFile.ReadInteger('SERVER', 'PORT', 0);
-    JsonConection.IPSERVER := jFile.ReadString('SERVER', 'IP', '');
+
+    JsonConection.MAXCHANNEL := jFile.ReadInteger('CHANNEL', 'MAXCHANNEL', 0);
+
+    JsonConection.PORTA_CHANNEL1 := jFile.ReadInteger('CHANNEL', 'PORT1', 0);
+    JsonConection.IP_CHANNEL1 := jFile.ReadString('CHANNEL', 'IP1', '');
+
+    JsonConection.PORTA_CHANNEL2 := jFile.ReadInteger('CHANNEL', 'PORT2', 0);
+    JsonConection.IP_CHANNEL2 := jFile.ReadString('CHANNEL', 'IP2', '');
+
+    JsonConection.PORTA_CHANNEL3 := jFile.ReadInteger('CHANNEL', 'PORT3', 0);
+    JsonConection.IP_CHANNEL3 := jFile.ReadString('CHANNEL', 'IP3', '');
+
+    JsonConection.PORTA_CHANNEL4 := jFile.ReadInteger('CHANNEL', 'PORT4', 0);
+    JsonConection.IP_CHANNEL4 := jFile.ReadString('CHANNEL', 'IP4', '');
+
+    JsonConection.PORTA_CHANNEL5 := jFile.ReadInteger('CHANNEL', 'PORT5', 0);
+    JsonConection.IP_CHANNEL5 := jFile.ReadString('CHANNEL', 'IP5', '');
+
     Log.Clear;
     Log.SelAttributes.Color := Laranja;
     Log.Lines.Add

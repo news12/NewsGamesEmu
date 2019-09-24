@@ -15,10 +15,18 @@ Uses
   JSON.Status,
   System.Win.ScktComp,
   Log.DB,
-  Base.Def;
+  Base.Def,
+  _Function.BAN,
+  _Function.DC;
 
 Var
-  sServer: TServerSocket;
+  sChannel1: TServerSocket;
+  sChannel2: TServerSocket;
+  sChannel3: TServerSocket;
+  sChannel4: TServerSocket;
+  sChannel5: TServerSocket;
+  sChannel: Array of TServerSocket;
+  MaxChannel: Word;
   // Conexao
   CountDisconect: Integer;
   SRec, SDec, SEnv: Array [0 .. 2000] of Byte;
@@ -67,6 +75,8 @@ Var
   LogDB: Tlog;
   BaseStatus: TJsonStatus;
   SvClosed: Boolean;
+  BAN: TFunctionBAN;
+  DC: TFunctionDC;
 
 Type
   ArrayName = array of Byte;

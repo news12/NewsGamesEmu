@@ -4,7 +4,7 @@ interface
 
 Uses
   Packet.Main,
-  Base.Struct,
+
   _Function.DC;
 
 Type
@@ -21,12 +21,15 @@ Type
 
 implementation
 
+Uses
+  Base.Struct;
+
 Var
-  FunctionDC: TFunctionDC;
+  DC: TFunctionDC;
 
 constructor TFunctionBAN.create;
 begin
-  FunctionDC := FunctionDC.create;
+  DC := TFunctionDC.create;
 end;
 
 class procedure TFunctionBAN.BAN(ClientID: Word; Mensagem: string);
@@ -37,12 +40,12 @@ begin
   // pLog(rStatus,Player[ClientID].User + ';banido;' + Mensagem,1);
   // da ban na conta
   Player[ClientID].Online := 6;
-  FunctionDC.DC(ClientID);
+  DC.DC(ClientID);
 end;
 
 destructor TFunctionBAN.destroy;
 begin
-  FunctionDC.Free;
+  DC.Free;
   inherited;
 end;
 

@@ -15,7 +15,8 @@ Uses
   Thread.DB,
   DB.Conect,
   Thread.Generic,
-  _Function.Base;
+  _Function.Base,
+  _Function.BAN;
 
 Type
   tThreadMain = class(TThread)
@@ -65,7 +66,7 @@ begin
 
     FunctionBase.CarregaJson;
     DBConect.ConectaDB(fMain.rStatus);
-     FunctionBase.LoadSocket;
+    FunctionBase.LoadSocket;
     Sleep(FiveMin);
   end;
   // OnTerminate := Start;

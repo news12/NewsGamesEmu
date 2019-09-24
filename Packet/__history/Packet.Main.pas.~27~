@@ -1,0 +1,181 @@
+unit Packet.Main;
+
+interface
+
+Uses
+  System.Win.ScktComp,
+  Base.Key,
+  Base.Def,
+  System.Classes,
+  _Function.Base,
+  System.SysUtils;
+
+Type
+  TPacketMain = Class
+
+  Private
+    { Class Private }
+
+  Public
+    { Class Public }
+    constructor create;
+
+    class procedure SendPacket(pClientID: Word; pSize: Word);
+    class procedure GetPacket(Sender: TObject; Socket: TCustomWinSocket;
+      Channel: Word);
+
+    destructor destroy; override;
+
+  End;
+
+implementation
+
+Uses
+  Base.Struct;
+
+Var
+  BaseFunction: TFunction;
+
+constructor TPacketMain.create;
+begin
+  BaseFunction := TFunction.create;
+end;
+
+class procedure TPacketMain.SendPacket(pClientID: Word; pSize: Word);
+begin
+  //
+end;
+
+class procedure TPacketMain.GetPacket(Sender: TObject; Socket: TCustomWinSocket;
+  Channel: Word);
+Var
+  nChannel: TServerSocket;
+  size: Word; // Tamanho do pacote
+  X: Word; // Loop
+  S: String; // Ultimo pacote recebido
+  Header: sHeader; // Separa cada pacote por seu código
+  clientid: Word; // Cliente vem do socket e não do pacote
+  pLogin: p20D; // Pacote de login vindo do cliente
+  pLoginDB: p20DDB; // pacote enviado ao DB com a solicitação de login
+begin
+
+  nChannel := TServerSocket(Sender).create(Nil);
+  packetLast := TStringList.create;
+  // Header := tHeader.Create;
+  // Recebe o pacote
+  size := Socket.ReceiveBuf(SRec, 2000);
+  // Servidor fechado dá dc
+  if SvClosed = FALSE then
+  begin
+    // Protege o pacote caso venha com ping e login
+    if (size = 120) and (SRec[4] = 116) then
+    begin
+      for X := 0 to 120 do
+      begin
+        SRec[X] := SRec[X + 4]
+      end;
+    end;
+    // Se nao for de ping continua
+    if (size > 4) and (size < 2000) then
+    begin
+      // Decodifica
+      Decode(size);
+      // Salva ultimo pacote recebido
+      S := '';
+      for X := 0 to size - 1 do
+      begin
+        S := S + ' ' + BaseFunction.ByteTohex(SDec[X]);
+      end;
+      packetLast.Text := S;
+      packetLast.SaveToFile('UltimoPacoteRecebido.txt');
+      // Pega o header para ver qual o codigo
+      Move(SDec, Header, sizeof(Header));
+      // Verifica qual o ClientID do usuário
+      clientid := BaseFunction.GetClientID(Socket.SocketHandle);
+      // Se tem clientID ou se está tentando logar 20D
+      if clientid > 0 then
+      begin
+{$REGION 'Tem ClientID, já conectado'}
+        // Checa pacote repetido
+        if CompareMem(@Header, @Client[clientid].LastHeader, sizeof(Header))
+        then
+        begin
+          BAN(clientid, 'Simulação de pacotes ! ');
+        end
+        else
+        begin
+          Move(Header, Client[clientid].LastHeader, sizeof(Header));
+          if (Header.Code <> $20D) then
+          begin
+            if Header.Code <> $3A0 then
+            begin
+              // PacketControl(clientid, Header.Code, size);
+            end;
+          end
+          else
+            Socket.Close;
+        end;
+{$ENDREGION}
+      end
+      else
+      begin
+{$REGION 'ClientID 0 e pacote 20D - Tenta logar'}
+        if Header.Code = $20D then
+        begin
+          // Move para a estrutura
+          Move(SDec, pLogin, sizeof(pLogin));
+          /// / Acha ClientID vasio
+          /// O ClienteID e usado como variavel e para quando achar
+          for clientid := 1 to 900 do
+          begin
+            if Client[clientid].Handle = 0 then
+            begin
+              Client[clientid].Handle := Socket.SocketHandle;
+              Client[clientid].Conect := nChannel.Socket.ActiveConnections - 1;
+              Break;
+            end;
+          end;
+          // Servidor Full
+          if clientid >= (MaxPlayer - 1) then
+          begin
+            // Notice(clientid, ' Use outro canal pois este está cheio ! ');
+            Socket.Close;
+          end
+          else
+          begin
+            // Servidor indisponivel
+            if SvClosed then
+            begin
+              // Notice(clientid,
+              // ' Servidor fechado pela administração. Utilize outro');
+              Socket.Close;
+            end
+            else
+            begin
+              // Solicita novo login no DB
+              pLoginDB.Header.cod := 1;
+              pLoginDB.Header.clientid := clientid;
+              Move(pLogin.ID, pLoginDB.ID, 12);
+              Move(pLogin.Pass, pLoginDB.Pass, 10);
+              Move(pLoginDB, sEnvDB, sizeof(pLoginDB));
+              // sDB.Socket.SendBuf(sEnvDB, sizeof(pLoginDB));
+            end; // servidor indisponivel
+          end; // servidor full
+
+        end;
+{$ENDREGION}
+      end;
+    end;
+  end
+  else
+    Socket.Close;
+
+end;
+
+destructor TPacketMain.destroy;
+begin
+  BaseFunction.Free;
+  inherited;
+end;
+
+end.

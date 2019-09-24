@@ -4,7 +4,6 @@ interface
 
 Uses
   System.Win.ScktComp,
-  Base.Struct,
   Base.Key,
   Base.Def,
   System.Classes,
@@ -22,13 +21,19 @@ Type
     constructor create;
 
     class procedure SendPacket(pClientID: Word; pSize: Word);
-    class procedure GetPacket(Sender: TObject; Socket: TCustomWinSocket);
+    class procedure GetPacket(Sender: TObject; Socket: TCustomWinSocket;
+      Channel: Word);
 
     destructor destroy; override;
 
   End;
 
 implementation
+
+Uses
+  Base.Struct,
+  _Function.Ban,
+  _Function.DC;
 
 Var
   BaseFunction: TFunction;
@@ -43,9 +48,10 @@ begin
   //
 end;
 
-class procedure TPacketMain.GetPacket(Sender: TObject;
-  Socket: TCustomWinSocket);
+class procedure TPacketMain.GetPacket(Sender: TObject; Socket: TCustomWinSocket;
+  Channel: Word);
 Var
+  nChannel: TServerSocket;
   size: Word; // Tamanho do pacote
   X: Word; // Loop
   S: String; // Ultimo pacote recebido
@@ -54,6 +60,8 @@ Var
   pLogin: p20D; // Pacote de login vindo do cliente
   pLoginDB: p20DDB; // pacote enviado ao DB com a solicitação de login
 begin
+
+  nChannel := TServerSocket(Sender).create(Nil);
   packetLast := TStringList.create;
   // Header := tHeader.Create;
   // Recebe o pacote
@@ -94,7 +102,7 @@ begin
         if CompareMem(@Header, @Client[clientid].LastHeader, sizeof(Header))
         then
         begin
-          // BAN(clientid, 'Simulação de pacotes ! ');
+          BAN.BAN(clientid, 'Simulação de pacotes ! ');
         end
         else
         begin
@@ -125,7 +133,7 @@ begin
             if Client[clientid].Handle = 0 then
             begin
               Client[clientid].Handle := Socket.SocketHandle;
-              Client[clientid].Conect := sServer.Socket.ActiveConnections - 1;
+              Client[clientid].Conect := nChannel.Socket.ActiveConnections - 1;
               Break;
             end;
           end;
