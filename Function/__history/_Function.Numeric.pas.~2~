@@ -1,0 +1,66 @@
+unit _Function.Numeric;
+
+interface
+Type
+TFunctionNumericPass= Class
+  Private
+   {Private Class}
+
+  Public
+   {Public Class}
+   class procedure NumericPass(ClientID:word;Buff:Array of byte);
+End;
+
+
+
+implementation
+
+Uses
+form.Main,
+Base.Def,
+Base.key,
+SendP,
+pnotice,
+pDC,
+fGetString;
+
+class procedure TFunctionNumeric.NumericPass(ClientID:word;Buff:Array of byte);
+var
+p:pFDE;
+begin
+  Move(buff,p,sizeof(p));
+  //Se já tiver errado 3x
+  if jogador[ClientID].ErrouNumerica = 3 then
+  begin
+    jogador[ClientID].ErrouNumerica := 0;
+    jogador[ClientID].Online := 7;
+    Notice(ClientID, 'Errou a senha numérica por 3x, restaure sua conta no site');
+    DC(ClientID);
+  end else
+  begin
+    //Envia o pacote
+    p.Header.Size := 12;
+    p.Header.Index := ClientID;
+    //Se a senha estiver errada/certa
+    if Jogador[ClientID].Numerica = GetString(p.senha) then
+    begin
+      p.Header.code := $FDE;
+      jogador[ClientID].ErrouNumerica := 0;
+      Move(p,sdec,sizeof(p));
+      Encode(sizeof(p));
+      Enviar(ClientID,sizeof(p));
+      Cliente[ClientID].CharStatus := 1;
+    end else
+    begin
+      p.Header.code := $FDF;
+      Inc(jogador[ClientID].ErrouNumerica,1);
+      Move(p,sdec,sizeof(p));
+      Encode(sizeof(p));
+      Enviar(ClientID,sizeof(p));
+      Notice(ClientID,' Senha incorreta, apenas 3 tentativas antes do bloqueio !');
+    end;
+  end;
+
+end;
+
+end.

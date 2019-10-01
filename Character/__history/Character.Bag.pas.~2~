@@ -1,0 +1,90 @@
+unit Character.Bag;
+
+interface
+
+Uses
+  System.SysUtils,
+  Base.Def,
+  Base.Struct,
+  _Function.Base,
+  FireDAC.Comp.Client,
+  Form.Main,
+  Character.Main;
+
+Type
+  tCharacterBag = Class
+  Private
+    { Private Class }
+    FId_Character: Integer;
+    FSlot: Word;
+    FId_Item: Word;
+    FEF1: Byte;
+    FEF2: Byte;
+    FEF3: Byte;
+    FEFV1: Byte;
+    FEFV2: Byte;
+    FEFV3: Byte;
+  Public
+    { Public Class }
+    property Id_Character: Integer read FId_Character write FId_Character;
+    property Slot: Word read FSlot write FSlot;
+    property Id_Item: Word read FId_Item write FId_Item;
+    property EF1: Byte read FEF1 write FEF1;
+    property EF2: Byte read FEF2 write FEF2;
+    property EF3: Byte read FEF3 write FEF3;
+    property EFV1: Byte read FEFV1 write FEFV1;
+    property EFV2: Byte read FEFV2 write FEFV2;
+    property EFV3: Byte read FEFV3 write FEFV3;
+
+    class function LoadBag(Id_Character: Integer): ArrayBag;
+  End;
+
+implementation
+
+class function tCharacterBag.LoadBag(Id_Character: Integer): ArrayBag;
+var
+  queryBag: TFDQuery;
+  bSQL: String;
+  Slot, I: Word;
+  // NewArray: array of sItem;
+begin
+  SetLength(Result, MaxSlotBag);
+  for Slot := 0 to MaxSlotBag do
+  begin
+    Try
+      bSQL := 'WHERE id_character =' + IntToStr(Id_Character) + ' AND slot =' +
+        IntToStr(Slot);
+      queryBag := SelectTable(TableCharacterBag, '*', 'slot', bSQL);
+      if Not queryBag.IsEmpty then
+      begin
+
+        With queryBag Do
+        begin
+          Result[Slot].Index := FieldByName('id_item').AsInteger;
+          Result[Slot].EF1 := FieldByName('ef1').AsInteger;
+          Result[Slot].EFV1 := FieldByName('efv1').AsInteger;
+          Result[Slot].EF2 := FieldByName('ef2').AsInteger;
+          Result[Slot].EFV2 := FieldByName('efv2').AsInteger;
+          Result[Slot].EF3 := FieldByName('ef3').AsInteger;
+          Result[Slot].EFV3 := FieldByName('efv3').AsInteger;
+        end;
+        // while Not queryBag.Eof do
+        // queryBag.Next;
+      end
+      else
+      begin
+
+        Result[Slot].Index := 0;
+      end;
+
+    Except
+      On E: Exception do
+      begin
+        pLog(frmDB.rStatus, E.Message, 1);
+      end;
+    End;
+  end;
+
+end;
+
+end.

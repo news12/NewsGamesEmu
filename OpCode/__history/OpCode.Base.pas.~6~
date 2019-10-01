@@ -1,0 +1,93 @@
+unit OpCode.Base;
+
+interface
+
+Uses
+  Base.Struct;
+
+Type
+  OpCodeBase = class
+  Private
+
+  Public
+    Class procedure PacketControl(ClientID, OpCode: Word; size: Word);
+  end;
+
+implementation
+
+class procedure OpCodeBase.PacketControl(ClientID, OpCode: Word; size: Word);
+begin
+
+  case OpCode of
+    $FDE:
+      Numeric.NumericPass(ClientID, SDec);
+    $20F:
+      CharCreate(ClientID, SDec); //
+    $211:
+      DeleteChar(ClientID, SDec); //
+    $213:
+      SendToWord(ClientID, SDec); //
+    $215:
+      CharList(ClientID);
+    $277:
+      AddPointsESkill(ClientID, SDec);
+    // $272:DropItem(ClientID,SDec);
+    $27B:
+      FuncaoNPC(ClientID, SDec);
+    $28B:
+      FuncaoNPC(ClientID, SDec);
+    $289:
+      Ressuscitar(ClientID);
+    $290:
+      Teleporte(ClientID);
+    $291:
+      ChangeCity(ClientID, SDec);
+    $2E4:
+      ApagarItem(ClientID, SDec);
+    $2E5:
+      SepararItem(ClientID, SDec);
+    $333:
+      Chat(ClientID, SDec);
+    $334:
+      ChatPM(ClientID, SDec);
+    $366:
+      Movimento(ClientID, SDec);
+    $36C:
+      Movimento(ClientID, SDec);
+    // $367:UseSkillArea(ClientID,SDec);
+    // $368:IlusaoHT(ClientID,SDec);
+    $373:
+      Volatille(ClientID, SDec);
+    $376:
+      MoveItem(ClientID, SDec);
+    // $378:ChangeSkillBar(ClientID,SDec);
+    $379:
+      BuyItem(ClientID, SDec);
+    $37A:
+      SellItem(ClientID, SDec);
+    $37E:
+      SairGrupo(ClientID, SDec);
+    $37F:
+      PedidoGrupo(ClientID, SDec);
+    $39D:
+      UseSkill(ClientID, SDec);
+    // $39E:UseSkillDuplo(ClientID,SDec);
+    $3A0:
+      Abort; // nao sei
+    $3AB:
+      AceitouGrupo(ClientID, SDec);
+    $3AE:
+      Abort; // Salvar conta (botao personagem)
+    $3E8:
+      Abort; // NPCs restaurar items vendidos
+    // $2C7:RespostaQuiz(ClientID,SDec);
+    // $2CB:chatserver(ClientID,'fazer ainda 2cb');
+    $369:
+      chatserver(ClientID, 'fazer ainda 369');
+    $399:
+      Abort; // Cliente que ativou pk
+
+  End;
+end;
+
+end.

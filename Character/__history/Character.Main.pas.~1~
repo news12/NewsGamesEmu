@@ -1,0 +1,281 @@
+unit Character.Main;
+
+interface
+
+Uses
+  System.SysUtils,
+  uNewDef,
+  uStruct,
+  uFunc,
+  uAccount,
+  uCharacterStatus,
+  FireDAC.Comp.Client;
+
+Type
+  tCharacter = Class
+
+  Private
+    { Private Class }
+    fName: String;
+    f_Class: Byte;
+    // Status sStatus add class separada
+    fPosX: Word;
+    fPosY: Word;
+    fGemX: Word;
+    fGemY: Word;
+    // Point sPoint add class separada
+    fCritical: Byte; // 1 = 0.4% -  255 = 102%
+    fskillbar1to4: Array [0 .. 3] of Byte; // 4
+    fSkillBar5to20: array [4 .. 19] of Byte; // 16 - ok
+    fMagicAttack: Word; // 1 - ok
+    // Resistence: sResistance add class separada
+    // Equip: Array [0 .. 15] of sItem add class separada
+    fEquipColor: array [0 .. 15] of Byte;
+    // Bag: Array [0 .. 62] of sItem; add class separada
+    fGold: Cardinal; // integer
+    fExp: Cardinal; // Int 64
+    fGuildIndex: Word;
+    fLearn: Cardinal;
+    fLearn2: Cardinal;
+    fCp: Byte; // 0 Pisca em vermelho | 1 - 30 PK |  36.000 = 1
+    fSecondsPK: Word;
+    faAbs: Word;
+    faPerfu: Word;
+    faExp: Word;
+    faDrop: Word;
+    // fDailyQuest: sQuest;   add class separada
+    // Quest: sQuest2;   add class separada
+    fTimeBoxExp: Word;
+    fTab: Array [0 .. 19] of Byte;
+    fRange: Byte;
+    // Buffs: Array [0 .. 31] of sBuffs; add class separada
+    fCity: Byte;
+    fSkillReceived: Array [0 .. 42] of Byte;
+
+  Public
+    { Public Class }
+    property Name: String read fName write fName;
+    property _Class: Byte read f_Class write f_Class;
+    property PosX: Word read fPosX write fPosX;
+    property PosY: Word read fPosY write fPosY;
+    property GemX: Word read fGemX write fGemX;
+    property GemY: Word read fGemY write fGemY;
+    property Critical: Byte read fCritical write fCritical;
+    // property Skillbar1to4: Array [0 .. 3] of Byte read fskillbar1to4
+    // write fskillbar1to4; // rever essa property
+    // property SkillBar5to20: Array [0 .. 3] of Byte read fSkillBar5to20
+    // write fSkillBar5to20; // rever essa property
+    property MagicAttack: Word read fMagicAttack write fMagicAttack;
+    // property EquipColor: Array [0 .. 15] of Byte read fEquipColor
+    // write fEquipColor;
+    property Gold: Cardinal read fGold write fGold;
+    property Exp: Cardinal read fExp write fExp;
+    property GuildIndex: Word read fGuildIndex write fGuildIndex;
+    property Learn: Cardinal read fLearn write fLearn;
+    property Learn2: Cardinal read fLearn2 write fLearn2;
+    property Cp: Byte read fCp write fCp;
+    property SecondsPK: Word read fSecondsPK write fSecondsPK;
+    property aAbs: Word read faAbs write faAbs;
+    property aPerfu: Word read faPerfu write faPerfu;
+    property aExp: Word read faExp write faExp;
+    property aDrop: Word read faDrop write faDrop;
+    property TimeBoxExp: Word read fTimeBoxExp write fTimeBoxExp;
+    // property Tab: Array [0 .. 19] of Byte read fTab write fTab;
+    // // rever essa property
+    property Range: Byte read fRange write fRange;
+    property City: Byte read fCity write fCity;
+    // property SkillReceived: Array [0 .. 42] of Byte read fSkillReceived
+    // write fSkillReceived; // rever essa property
+
+    class function CreatCharacter(Player: sPlayer; CharID: Word): Boolean;
+
+    class function LoadCharacter(CharID: Word): sPlayer;
+
+  End;
+
+implementation
+
+Uses
+  uDB, uDM, uCharacterBag;
+
+class function tCharacter.LoadCharacter(CharID: Word): sPlayer;
+Var
+  Table: TFDQuery;
+  eSQL: String;
+  I, p, SlotsBag: Word;
+  ByteArray: ArrayName;
+  LoadBag: ArrayBag;
+  CharacterBag: tCharacterBag;
+
+begin
+  eSQL := ' INNER JOIN nCharacter_Status s ON s.id_Character = c.id' +
+    ' WHERE c.id_account=' + FloatToStr(Player.ID_ACC) +
+    ' AND c.character_slot =' + IntToStr(CharID);
+  Table := SelectTable(TableCharacter, 'c.*,' + 's.level,' + 's.defence,' +
+    's.attack,' + 's.merchant,' + 's.speed,' + 's.inu1,' + 's.inu2,' +
+    's.maxHP,' + 's.maxMP,' + 's.HP,' + 's.MP,' + 's.s_str,' + 's.s_int,' +
+    's.s_dex,' + 's.s_con,' + 's.wMaster,' + 's.fMaster,' + 's.sMaster,' +
+    's.tMaster', '', eSQL, ' c');
+  if Not Table.IsEmpty then
+  begin
+    I := CharID;
+    Try
+      CharacterBag := tCharacterBag.Create;
+      LoadBag := CharacterBag.LoadBag(Table.FieldByName('id').AsInteger);
+      ByteArray := GetByte(Table.FieldByName('name').AsString);
+      for p := 0 to 11 do
+        result.Character[I].Name[p] := ByteArray[p];
+
+      result.Character[I]._Class := Table.FieldByName('_class').AsInteger;
+      result.Character[I].PosX := Table.FieldByName('posX').AsInteger;
+      result.Character[I].PosY := Table.FieldByName('posY').AsInteger;
+      result.Character[I].GemX := Table.FieldByName('gemaX').AsInteger;
+      result.Character[I].GemY := Table.FieldByName('gemaY').AsInteger;
+      result.Character[I].Critical := Table.FieldByName('crit').AsInteger;
+      result.Character[I].MagicAttack := Table.FieldByName('magicattack')
+        .AsInteger;
+      // Table.FieldByName('resist').AsInteger := Player.Character[0].Resistence[0];
+      result.Character[I].Gold := Table.FieldByName('gold').Value;
+      result.Character[I].Exp := Table.FieldByName('exp').Value;
+      result.Character[I].GuildIndex := Table.FieldByName('guildindex')
+        .AsInteger;
+      result.Character[I].Learn := Table.FieldByName('learn').Value;
+      result.Character[I].Learn2 := Table.FieldByName('learn2').Value;
+      result.Character[I].Cp := Table.FieldByName('cp').AsInteger;
+      result.Character[I].SecondsPK := Table.FieldByName('pkseconds').AsInteger;
+      result.Character[I].aAbs := Table.FieldByName('s_abs').AsInteger;
+      result.Character[I].aPerfu := Table.FieldByName('s_perfu').AsInteger;
+      result.Character[I].aExp := Table.FieldByName('s_exp').AsInteger;
+      result.Character[I].aDrop := Table.FieldByName('s_drop').AsInteger;
+      result.Character[I].Range := Table.FieldByName('range').AsInteger;
+      result.Character[I].City := Table.FieldByName('city').AsInteger;
+      // Table.FieldByName('points').AsInteger := Player.Character[0].Point;
+      result.Character[I].TimeBoxExp := Table.FieldByName('TimeBoxExp')
+        .AsInteger;
+
+      { Inicio Carregamento de status }
+      result.Character[I].Status.Level := Table.FieldByName('level').AsInteger;
+      result.Character[I].Status.Defence := Table.FieldByName('defence')
+        .AsInteger;
+      result.Character[I].Status.attack := Table.FieldByName('attack')
+        .AsInteger;
+      // result.Character[I].Status.Merchant := Table.FieldByName('merchant')
+      // .AsInteger;
+      result.Character[I].Equip[0].Index := Table.FieldByName('merchant')
+        .AsInteger;
+      result.Character[I].Status.speed := Table.FieldByName('speed').AsInteger;
+      result.Character[I].Status.inu1 := Table.FieldByName('inu1').AsInteger;
+      result.Character[I].Status.inu2 := Table.FieldByName('inu2').AsInteger;
+      result.Character[I].Status.maxHP := Table.FieldByName('maxHP').AsInteger;
+      result.Character[I].Status.MaxMP := Table.FieldByName('maxMP').AsInteger;
+      result.Character[I].Status.HP := Table.FieldByName('HP').AsInteger;
+      result.Character[I].Status.MP := Table.FieldByName('MP').AsInteger;
+      result.Character[I].Status.Str := Table.FieldByName('s_str').AsInteger;
+      result.Character[I].Status.int := Table.FieldByName('s_int').AsInteger;
+      result.Character[I].Status.Dex := Table.FieldByName('s_dex').AsInteger;
+      result.Character[I].Status.Con := Table.FieldByName('s_con').AsInteger;
+      result.Character[I].Status.wMaster := Table.FieldByName('wMaster')
+        .AsInteger;
+      result.Character[I].Status.fMaster := Table.FieldByName('fMaster')
+        .AsInteger;
+      result.Character[I].Status.sMaster := Table.FieldByName('sMaster')
+        .AsInteger;
+      result.Character[I].Status.tMaster := Table.FieldByName('tMaster')
+        .AsInteger;
+      for SlotsBag := 0 to 62 do
+        result.Character[I].Bag[SlotsBag].Index := LoadBag[SlotsBag].Index;
+      { Fim Carregamento de status }
+      logStr := 'o Jogador: ' + result.User + ' - Entrou no Jogo: ' +
+        GetString(Player.Character[I].Name, 12);
+
+    Except
+      On E: Exception do
+      begin
+        logStr := 'Erro ao entrar no jogo, Personagem :[' +
+          GetString(Player.Character[I].Name, 12) + '] ' + E.Message;
+
+      end;
+    End;
+  end;
+
+end;
+
+class function tCharacter.CreatCharacter(Player: sPlayer; CharID: Word)
+  : Boolean;
+Var
+  Table: TFDQuery;
+  TableBag: TFDQuery;
+  eSQL: String;
+  MaxChar: Word;
+  X: Word;
+  CreatStatus: tCharacterStatus;
+
+begin
+  MaxChar := 3;
+  eSQL := 'WHERE id_account=' + FloatToStr(Player.ID_ACC);
+  Table := SelectTable(TableCharacter, '*', '', eSQL);
+  Table.Last;
+  X := Table.RecordCount;
+  if X < MaxChar then
+  begin
+    Try
+      CreatStatus := tCharacterStatus.Create;
+      Table.Insert;
+      Table.FieldByName('id_account').AsInteger := Player.ID_ACC;
+      Table.FieldByName('name').AsString :=
+        GetString(Player.Character[CharID].Name, 12);
+      Table.FieldByName('character_Slot').AsInteger := CharID;
+      Table.FieldByName('_class').AsInteger := Player.Character[CharID]._Class;
+      Table.FieldByName('posX').AsInteger := Player.Character[CharID].PosX;
+      Table.FieldByName('posY').AsInteger := Player.Character[CharID].PosY;
+      Table.FieldByName('gemaX').AsInteger := Player.Character[CharID].GemX;
+      Table.FieldByName('gemaY').AsInteger := Player.Character[CharID].GemY;
+      Table.FieldByName('crit').AsInteger := Player.Character[CharID].Critical;
+      Table.FieldByName('magicattack').AsInteger := Player.Character[CharID]
+        .MagicAttack;
+      // Table.FieldByName('resist').AsInteger := Player.Character[0].Resistence[0];
+      Table.FieldByName('gold').AsFloat := Player.Character[CharID].Gold;
+      Table.FieldByName('exp').AsFloat := Player.Character[CharID].Exp;
+      Table.FieldByName('guildindex').AsInteger := Player.Character[CharID]
+        .GuildIndex;
+      Table.FieldByName('learn').AsFloat := Player.Character[CharID].Learn;
+      Table.FieldByName('learn2').AsFloat := Player.Character[CharID].Learn2;
+      Table.FieldByName('cp').AsInteger := Player.Character[CharID].Cp;
+      Table.FieldByName('pkseconds').AsInteger := Player.Character[CharID]
+        .SecondsPK;
+      Table.FieldByName('s_abs').AsInteger := Player.Character[CharID].aAbs;
+      Table.FieldByName('s_perfu').AsInteger := Player.Character[CharID].aPerfu;
+      Table.FieldByName('s_exp').AsInteger := Player.Character[CharID].aExp;
+      Table.FieldByName('s_drop').AsInteger := Player.Character[CharID].aDrop;
+      Table.FieldByName('range').AsInteger := Player.Character[CharID].Range;
+      Table.FieldByName('city').AsInteger := Player.Character[CharID].City;
+      // Table.FieldByName('points').AsInteger := Player.Character[0].Point;
+      Table.FieldByName('TimeBoxExp').AsInteger := Player.Character[CharID]
+        .TimeBoxExp;
+      Table.Post;
+
+      if Not CreatStatus.CreatCharacterStatus(Player, CharID) then
+      begin
+        // DM.Transaction.Rollback;
+        logStr := 'Erro ao criar status do personagem!!!';
+        exit;
+      end
+      else
+        DM.Connection.Commit;
+      logStr := 'o Jogador: ' + Player.User + ' - Criou o Personagem: ' +
+        GetString(Player.Character[CharID].Name, 12);
+      result := True;
+    Except
+      On E: Exception do
+      begin
+        logStr := 'Erro ao criar o Personagem :[' +
+          GetString(Player.Character[CharID].Name, 12) + '] ' + E.Message;
+        // DM.Transaction.Rollback;
+        result := False;
+      end;
+    End;
+  end;
+end;
+
+end.
+

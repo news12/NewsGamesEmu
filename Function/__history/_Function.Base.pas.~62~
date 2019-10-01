@@ -1,0 +1,365 @@
+unit _Function.Base;
+
+interface
+
+Uses
+  System.SysUtils,
+  Vcl.StdCtrls,
+  Base.LoadConfig,
+  System.Win.ScktComp,
+  FireDAC.Comp.Client,
+  Log.DB;
+
+Type
+  TFunction = Class
+  Protected
+    { Class Protected }
+
+  Private
+    class procedure pChannel1;
+    class procedure pChannel2;
+    class procedure pChannel3;
+    class procedure pChannel4;
+    class procedure pChannel5;
+    { Class Private }
+
+  Public
+    { Class Public }
+    Constructor Create;
+
+    class Function DateHourLabel(vLabel: TLabel): String;
+    class Procedure CarregaJson;
+    class function ByteToHex(InByte: byte): String;
+    class function GetClientID(H: Cardinal): Word;
+    class procedure LoadSocket;
+    class function GetString(Buff: Array of byte; uSize: Word): String;
+    class function SelectTable(pTable: String; pFields: String = '';
+      pOrder: String = ''; pSQL: String = ''; pRename: String = ''): TFDQuery;
+    class function UpdateTable(tTabela: String; tCampo: String; tValor: String;
+      SqlExtra: String = ''): TFDQuery;
+    class function GetByte(const Value: String): ArrayName;
+
+    Destructor Destroy; override;
+
+  End;
+
+implementation
+
+Uses
+  Form.Main,
+  Base.Struct,
+  _Function.BAN,
+  _Function.DC,
+  _Function.Notice,
+  _Function.Numeric,
+  Base.GetConexao,
+  Packet.Main;
+
+Var
+  LoadConfig: TLoadConfig;
+  LogDB: TLog;
+
+Constructor TFunction.Create;
+begin
+
+  LoadConfig := TLoadConfig.Create;
+  LogDB := TLog.Create;
+  BAN := TFunctionBAN.Create;
+  DC := TFunctionDC.Create;
+  Numeric := TFunctionNumeric.Create;
+  Notice := TFunctionNotice.Create;
+  PacketMain := TPacketMain.Create;
+end;
+
+class procedure TFunction.LoadSocket;
+begin
+  case MaxChannel of
+    1:
+      pChannel1;
+    2:
+      begin
+        pChannel1;
+        pChannel2;
+      end;
+    3:
+      begin
+        pChannel1;
+        pChannel2;
+        pChannel3;
+      end;
+    4:
+      begin
+        pChannel1;
+        pChannel2;
+        pChannel3;
+        pChannel4;
+      end;
+    5:
+      begin
+        pChannel1;
+        pChannel2;
+        pChannel3;
+        pChannel4;
+        pChannel5;
+      end
+  else
+    begin
+      pChannel1;
+      pChannel2;
+      pChannel3;
+      pChannel4;
+      pChannel5;
+    end;
+  end;
+
+end;
+
+class function TFunction.GetByte(const Value: String): ArrayName;
+var
+  I, J: Integer;
+  BinarySize: Integer;
+begin
+
+  BinarySize := (Length(Value) + 1) * SizeOf(Char);
+  SetLength(Result, BinarySize);
+  for I := 0 to BinarySize do
+  begin
+    J := I + 1;
+    Move(Value[J], Result[I], BinarySize);
+  end;
+
+end;
+
+class function TFunction.UpdateTable(tTabela: String; tCampo: String;
+  tValor: String; SqlExtra: String = ''): TFDQuery;
+Var
+  Conect: TGetConexao;
+begin
+  try
+    // cria a class de conexão
+    Conect := TGetConexao.Create;
+    // cria uma nova query
+    Result := TFDQuery.Create(Nil);
+
+    with Result Do
+    begin
+      Connection := Conect.Conexao;
+      Close;
+      SQL.clear;
+      SQL.Add('UPDATE ' + tTabela); // Monta update dinamico
+      SQL.Add('SET ' + tCampo + '=' + tValor);
+
+      // verifica se foi informado um sql extra
+      if SqlExtra <> '' then
+        SQL.Add(SqlExtra); // adciona o sql extra no select
+
+      ExecSQL;
+      // DM.Connection.Commit;
+    end;
+  Except
+    // erro no select
+  end;
+end;
+
+class function TFunction.SelectTable(pTable: String; pFields: String = '';
+  pOrder: String = ''; pSQL: String = ''; pRename: String = ''): TFDQuery;
+Var
+  Conect: TGetConexao;
+begin
+  try
+    Conect := TGetConexao.Create;
+
+    Result := TFDQuery.Create(Nil); // Cria uma Query dinamica
+
+    Result.Name := pTable;
+
+    with Result Do
+    begin
+      Connection := Conect.Conexao;
+      if pFields = '' then
+        pFields := '*';
+      Close;
+      SQL.clear;
+      SQL.Add('SELECT ' + pFields + ' FROM ' + pTable + '' + pRename);
+      // Monta select dinamico
+
+      if pSQL <> '' then
+        SQL.Add(pSQL);
+
+      if pOrder <> '' then
+        SQL.Add('ORDER BY ' + pOrder);
+
+      open;
+      // DM.Connection.Commit;
+    end;
+  Except
+    // erro no update
+  end;
+end;
+
+class function TFunction.GetString(Buff: Array of byte; uSize: Word): String;
+var
+  Text: String;
+  Character: byte;
+begin
+  Text := '';
+  for Character := 0 to uSize - 1 do // monta a string
+  begin
+    if Buff[Character] = 0 then
+      break;
+    Text := Text + Char(Buff[Character]);
+  end;
+  Result := Trim(Text);
+end;
+
+// pega o id do cliente no Handle do Socket
+class function TFunction.GetClientID(H: Cardinal): Word;
+var
+  I: Word;
+begin
+  Result := 0;
+  for I := 1 to MaxPlayer do
+  begin
+    if Client[I].Handle = H then
+    begin
+      Result := I;
+      break;
+    end;
+  end;
+end;
+
+/// /Faz do byte uma String[Hexadecimal]
+class function TFunction.ByteToHex(InByte: byte): String;
+const
+  Digits: array [0 .. 15] of Char = '0123456789ABCDEF';
+begin
+  Result := Digits[InByte shr 4] + Digits[InByte and $0F];
+end;
+
+class Procedure TFunction.CarregaJson;
+Var
+  I: Word;
+begin
+  try
+    LoadConfig.LoadFiles(fMain.rStatus);
+    // decrementa 1 pois vamos usar um array
+    MaxChannel := JsonConection.MaxChannel - 1;
+    SetLength(sChannel, MaxChannel);
+
+    for I := 0 to MaxChannel do
+    begin
+      sChannel[I] := TServerSocket.Create(Nil);
+      sChannel[I].Name := 'Schannel' + IntToStr(I);
+    end;
+
+  Except
+    // erro ao carregar files
+  end;
+
+end;
+
+class Function TFunction.DateHourLabel(vLabel: TLabel): String;
+var
+  Data: String;
+  Hora: String;
+begin
+  Data := FormatDateTime('dd/mm/yyyy', Date);
+  Hora := FormatDateTime('H:mm:ss', Time);
+  vLabel.Caption := Data + ' | ' + Hora;
+end;
+
+class procedure TFunction.pChannel5;
+begin
+  try
+    sChannel[4].Port := JsonConection.PORTA_CHANNEL5;
+    sChannel[4].Active := True;
+    LogDB.DBLog(fMain.rStatus, 'Channel_5 Started Success!!!', 0);
+    LogDB.DBLog(fMain.rStatus, 'Porta: [' +
+      IntToStr(JsonConection.PORTA_CHANNEL5) + ']', 2);
+    LogDB.DBLog(fMain.rStatus, 'IP: [' + JsonConection.IP_CHANNEL5 + ']', 2);
+  except
+    LogDB.DBLog(fMain.rStatus, 'Erro ao abrir conexão de sockets: [' +
+      IntToStr(JsonConection.PORTA_CHANNEL5) + ']', 1);
+  end;
+end;
+
+class procedure TFunction.pChannel4;
+begin
+  try
+    sChannel[3].Port := JsonConection.PORTA_CHANNEL4;
+    sChannel[3].Active := True;
+    LogDB.DBLog(fMain.rStatus, 'Channel_4 Started Success!!!', 0);
+    LogDB.DBLog(fMain.rStatus, 'Porta: [' +
+      IntToStr(JsonConection.PORTA_CHANNEL4) + ']', 2);
+    LogDB.DBLog(fMain.rStatus, 'IP: [' + JsonConection.IP_CHANNEL4 + ']', 2);
+  except
+    LogDB.DBLog(fMain.rStatus, 'Erro ao abrir conexão de sockets: [' +
+      IntToStr(JsonConection.PORTA_CHANNEL4) + ']', 1);
+  end;
+end;
+
+class procedure TFunction.pChannel3;
+begin
+  try
+    sChannel[2].Port := JsonConection.PORTA_CHANNEL3;
+    sChannel[2].Active := True;
+    LogDB.DBLog(fMain.rStatus, 'Channel_3 Started Success!!!', 0);
+    LogDB.DBLog(fMain.rStatus, 'Porta: [' +
+      IntToStr(JsonConection.PORTA_CHANNEL3) + ']', 2);
+    LogDB.DBLog(fMain.rStatus, 'IP: [' + JsonConection.IP_CHANNEL3 + ']', 2);
+  except
+    LogDB.DBLog(fMain.rStatus, 'Erro ao abrir conexão de sockets: [' +
+      IntToStr(JsonConection.PORTA_CHANNEL3) + ']', 1);
+  end;
+end;
+
+class procedure TFunction.pChannel2;
+begin
+  try
+    sChannel[1].Port := JsonConection.PORTA_CHANNEL2;
+    sChannel[1].Active := True;
+    LogDB.DBLog(fMain.rStatus, 'Channel_2 Started Success!!!', 0);
+    LogDB.DBLog(fMain.rStatus, 'Porta: [' +
+      IntToStr(JsonConection.PORTA_CHANNEL2) + ']', 2);
+    LogDB.DBLog(fMain.rStatus, 'IP: [' + JsonConection.IP_CHANNEL2 + ']', 2);
+  except
+    LogDB.DBLog(fMain.rStatus, 'Erro ao abrir conexão de sockets: [' +
+      IntToStr(JsonConection.PORTA_CHANNEL2) + ']', 1);
+  end;
+end;
+
+class procedure TFunction.pChannel1;
+begin
+  try
+    sChannel[0].Port := JsonConection.PORTA_CHANNEL1;
+    sChannel[0].Active := True;
+    LogDB.DBLog(fMain.rStatus, 'Channel_1 Started Success!!!', 0);
+    LogDB.DBLog(fMain.rStatus, 'Porta: [' +
+      IntToStr(JsonConection.PORTA_CHANNEL1) + ']', 2);
+    LogDB.DBLog(fMain.rStatus, 'IP: [' + JsonConection.IP_CHANNEL1 + ']', 2);
+  except
+    LogDB.DBLog(fMain.rStatus, 'Erro ao abrir conexão de sockets: [' +
+      IntToStr(JsonConection.PORTA_CHANNEL1) + ']', 1);
+  end;
+end;
+
+Destructor TFunction.Destroy;
+Var
+  I: Integer;
+begin
+  LoadConfig.Free;
+  LogDB.Free;
+  BAN.Free;
+  DC.Free;
+  Numeric.Free;
+  Notice.Free;
+  PacketMain.Free;
+  for I := 0 to MaxChannel - 1 do
+  // decrementa 1 pois iniciamos a contagem do zero
+  begin
+    sChannel[I].Free;
+  end;
+  inherited;
+end;
+
+end.

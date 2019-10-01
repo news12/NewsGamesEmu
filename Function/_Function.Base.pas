@@ -7,6 +7,8 @@ Uses
   Vcl.StdCtrls,
   Base.LoadConfig,
   System.Win.ScktComp,
+  FireDAC.Comp.Client,
+  Base.Struct,
   Log.DB;
 
 Type
@@ -31,6 +33,13 @@ Type
     class function ByteToHex(InByte: byte): String;
     class function GetClientID(H: Cardinal): Word;
     class procedure LoadSocket;
+    class function GetString(Buff: Array of byte; uSize: Word): String;
+    class function SelectTable(pTable: String; pFields: String = '';
+      pOrder: String = ''; pSQL: String = ''; pRename: String = ''): TFDQuery;
+    class function UpdateTable(tTabela: String; tCampo: String; tValor: String;
+      SqlExtra: String = ''): TFDQuery;
+    class function GetByte(const Value: String): ArrayName;
+
     Destructor Destroy; override;
 
   End;
@@ -39,9 +48,12 @@ implementation
 
 Uses
   Form.Main,
-  Base.Struct,
   _Function.BAN,
-  _Function.DC;
+  _Function.DC,
+  _Function.Notice,
+  _Function.Numeric,
+  Base.GetConexao,
+  Packet.Main;
 
 Var
   LoadConfig: TLoadConfig;
@@ -54,6 +66,9 @@ begin
   LogDB := TLog.Create;
   BAN := TFunctionBAN.Create;
   DC := TFunctionDC.Create;
+  Numeric := TFunctionNumeric.Create;
+  Notice := TFunctionNotice.Create;
+  PacketMain := TPacketMain.Create;
 end;
 
 class procedure TFunction.LoadSocket;
@@ -99,6 +114,104 @@ begin
 
 end;
 
+class function TFunction.GetByte(const Value: String): ArrayName;
+var
+  I, J: Integer;
+  BinarySize: Integer;
+begin
+
+  BinarySize := (Length(Value) + 1) * SizeOf(Char);
+  SetLength(Result, BinarySize);
+  for I := 0 to BinarySize do
+  begin
+    J := I + 1;
+    Move(Value[J], Result[I], BinarySize);
+  end;
+
+end;
+
+class function TFunction.UpdateTable(tTabela: String; tCampo: String;
+  tValor: String; SqlExtra: String = ''): TFDQuery;
+Var
+  Conect: TGetConexao;
+begin
+  try
+    // cria a class de conexão
+    Conect := TGetConexao.Create;
+    // cria uma nova query
+    Result := TFDQuery.Create(Nil);
+
+    with Result Do
+    begin
+      Connection := Conect.Conexao;
+      Close;
+      SQL.clear;
+      SQL.Add('UPDATE ' + tTabela); // Monta update dinamico
+      SQL.Add('SET ' + tCampo + '=' + tValor);
+
+      // verifica se foi informado um sql extra
+      if SqlExtra <> '' then
+        SQL.Add(SqlExtra); // adciona o sql extra no select
+
+      ExecSQL;
+      // DM.Connection.Commit;
+    end;
+  Except
+    // erro no select
+  end;
+end;
+
+class function TFunction.SelectTable(pTable: String; pFields: String = '';
+  pOrder: String = ''; pSQL: String = ''; pRename: String = ''): TFDQuery;
+Var
+  Conect: TGetConexao;
+begin
+  try
+    Conect := TGetConexao.Create;
+
+    Result := TFDQuery.Create(Nil); // Cria uma Query dinamica
+
+    Result.Name := pTable;
+
+    with Result Do
+    begin
+      Connection := Conect.Conexao;
+      if pFields = '' then
+        pFields := '*';
+      Close;
+      SQL.clear;
+      SQL.Add('SELECT ' + pFields + ' FROM ' + pTable + '' + pRename);
+      // Monta select dinamico
+
+      if pSQL <> '' then
+        SQL.Add(pSQL);
+
+      if pOrder <> '' then
+        SQL.Add('ORDER BY ' + pOrder);
+
+      open;
+      // DM.Connection.Commit;
+    end;
+  Except
+    // erro no update
+  end;
+end;
+
+class function TFunction.GetString(Buff: Array of byte; uSize: Word): String;
+var
+  Text: String;
+  Character: byte;
+begin
+  Text := '';
+  for Character := 0 to uSize - 1 do // monta a string
+  begin
+    if Buff[Character] = 0 then
+      break;
+    Text := Text + Char(Buff[Character]);
+  end;
+  Result := Trim(Text);
+end;
+
 // pega o id do cliente no Handle do Socket
 class function TFunction.GetClientID(H: Cardinal): Word;
 var
@@ -131,7 +244,7 @@ begin
     LoadConfig.LoadFiles(fMain.rStatus);
     // decrementa 1 pois vamos usar um array
     MaxChannel := JsonConection.MaxChannel - 1;
-    setLength(sChannel, MaxChannel);
+    SetLength(sChannel, MaxChannel);
 
     for I := 0 to MaxChannel do
     begin
@@ -236,10 +349,11 @@ Var
 begin
   LoadConfig.Free;
   LogDB.Free;
-  // SChannel1.Free;
-  // SChannel2.Free;
-  // SChannel3.Free;
-  // SChannel4.Free;
+  BAN.Free;
+  DC.Free;
+  Numeric.Free;
+  Notice.Free;
+  PacketMain.Free;
   for I := 0 to MaxChannel - 1 do
   // decrementa 1 pois iniciamos a contagem do zero
   begin

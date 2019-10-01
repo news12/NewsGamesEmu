@@ -32,6 +32,9 @@ Type
     destructor Destroy; override;
   end;
 
+Var
+  FunctionBase: Tfunction;
+
 Implementation
 
 Uses
@@ -40,7 +43,6 @@ Uses
 var
   ThreadDB: tThreadDB;
   ThreadGeneric: TThreadGeneric;
-  FunctionBase: Tfunction;
   DBConect: TDBConect;
 
 constructor tThreadMain.Create;

@@ -7,7 +7,6 @@ Uses
   Base.Key,
   Base.Def,
   System.Classes,
-  _Function.Base,
   System.SysUtils;
 
 Type
@@ -20,7 +19,7 @@ Type
     { Class Public }
     constructor create;
 
-    class procedure SendPacket(pClientID: Word; pSize: Word);
+    class procedure SendPacket(ClientID: Word; pSize: Word);
     class procedure GetPacket(Sender: TObject; Socket: TCustomWinSocket;
       Channel: Word);
 
@@ -32,18 +31,17 @@ implementation
 
 Uses
   Base.Struct,
+  _Function.Base,
   _Function.Ban,
+  Thread.Main,
   _Function.DC;
-
-Var
-  BaseFunction: TFunction;
 
 constructor TPacketMain.create;
 begin
-  BaseFunction := TFunction.create;
+
 end;
 
-class procedure TPacketMain.SendPacket(pClientID: Word; pSize: Word);
+class procedure TPacketMain.SendPacket(ClientID: Word; pSize: Word);
 begin
   //
 end;
@@ -56,7 +54,7 @@ Var
   X: Word; // Loop
   S: String; // Ultimo pacote recebido
   Header: sHeader; // Separa cada pacote por seu código
-  clientid: Word; // Cliente vem do socket e não do pacote
+  ClientID: Word; // Cliente vem do socket e não do pacote
   pLogin: p20D; // Pacote de login vindo do cliente
   pLoginDB: p20DDB; // pacote enviado ao DB com a solicitação de login
 begin
@@ -86,27 +84,27 @@ begin
       S := '';
       for X := 0 to size - 1 do
       begin
-        S := S + ' ' + BaseFunction.ByteTohex(SDec[X]);
+        S := S + ' ' + FunctionBase.ByteTohex(SDec[X]);
       end;
       packetLast.Text := S;
       packetLast.SaveToFile('UltimoPacoteRecebido.txt');
       // Pega o header para ver qual o codigo
       Move(SDec, Header, sizeof(Header));
       // Verifica qual o ClientID do usuário
-      clientid := BaseFunction.GetClientID(Socket.SocketHandle);
+      ClientID := FunctionBase.GetClientID(Socket.SocketHandle);
       // Se tem clientID ou se está tentando logar 20D
-      if clientid > 0 then
+      if ClientID > 0 then
       begin
 {$REGION 'Tem ClientID, já conectado'}
         // Checa pacote repetido
-        if CompareMem(@Header, @Client[clientid].LastHeader, sizeof(Header))
+        if CompareMem(@Header, @Client[ClientID].LastHeader, sizeof(Header))
         then
         begin
-          BAN.BAN(clientid, 'Simulação de pacotes ! ');
+          Ban.Ban(ClientID, 'Simulação de pacotes ! ');
         end
         else
         begin
-          Move(Header, Client[clientid].LastHeader, sizeof(Header));
+          Move(Header, Client[ClientID].LastHeader, sizeof(Header));
           if (Header.Code <> $20D) then
           begin
             if Header.Code <> $3A0 then
@@ -128,17 +126,17 @@ begin
           Move(SDec, pLogin, sizeof(pLogin));
           /// / Acha ClientID vasio
           /// O ClienteID e usado como variavel e para quando achar
-          for clientid := 1 to 900 do
+          for ClientID := 1 to 900 do
           begin
-            if Client[clientid].Handle = 0 then
+            if Client[ClientID].Handle = 0 then
             begin
-              Client[clientid].Handle := Socket.SocketHandle;
-              Client[clientid].Conect := nChannel.Socket.ActiveConnections - 1;
+              Client[ClientID].Handle := Socket.SocketHandle;
+              Client[ClientID].Conect := nChannel.Socket.ActiveConnections - 1;
               Break;
             end;
           end;
           // Servidor Full
-          if clientid >= (MaxPlayer - 1) then
+          if ClientID >= (MaxPlayer - 1) then
           begin
             // Notice(clientid, ' Use outro canal pois este está cheio ! ');
             Socket.Close;
@@ -156,7 +154,7 @@ begin
             begin
               // Solicita novo login no DB
               pLoginDB.Header.cod := 1;
-              pLoginDB.Header.clientid := clientid;
+              pLoginDB.Header.ClientID := ClientID;
               Move(pLogin.ID, pLoginDB.ID, 12);
               Move(pLogin.Pass, pLoginDB.Pass, 10);
               Move(pLoginDB, sEnvDB, sizeof(pLoginDB));
@@ -176,7 +174,7 @@ end;
 
 destructor TPacketMain.destroy;
 begin
-  BaseFunction.Free;
+
   inherited;
 end;
 

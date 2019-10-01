@@ -26,7 +26,12 @@ uses
   Packet.Main in 'Packet\Packet.Main.pas',
   _Function.DC in 'Function\_Function.DC.pas',
   _Function.BAN in 'Function\_Function.BAN.pas',
-  OpCode.Base in 'OpCode\OpCode.Base.pas';
+  OpCode.Base in 'OpCode\OpCode.Base.pas',
+  _Function.Numeric in 'Function\_Function.Numeric.pas',
+  _Function.Notice in 'Function\_Function.Notice.pas',
+  Character.Main in 'Character\Character.Main.pas',
+  Character.Bag in 'Character\Character.Bag.pas',
+  Character.Status in 'Character\Character.Status.pas';
 
 {$R *.res}
 
