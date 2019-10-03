@@ -8,8 +8,7 @@ Uses
   Base.LoadConfig,
   System.Win.ScktComp,
   FireDAC.Comp.Client,
-  Base.Struct,
-  Log.DB;
+  Base.Struct;
 
 Type
   TFunction = Class
@@ -53,6 +52,7 @@ Uses
   _Function.Notice,
   _Function.Numeric,
   Base.GetConexao,
+  Log.DB,
   Packet.Main;
 
 Var
@@ -273,6 +273,7 @@ begin
   try
     sChannel[4].Port := JsonConection.PORTA_CHANNEL5;
     sChannel[4].Active := True;
+    sChannel[4].OnClientRead := PacketMain.GetPacket;
     LogDB.DBLog(fMain.rStatus, 'Channel_5 Started Success!!!', 0);
     LogDB.DBLog(fMain.rStatus, 'Porta: [' +
       IntToStr(JsonConection.PORTA_CHANNEL5) + ']', 2);
@@ -288,6 +289,7 @@ begin
   try
     sChannel[3].Port := JsonConection.PORTA_CHANNEL4;
     sChannel[3].Active := True;
+    sChannel[3].OnClientRead := PacketMain.GetPacket;
     LogDB.DBLog(fMain.rStatus, 'Channel_4 Started Success!!!', 0);
     LogDB.DBLog(fMain.rStatus, 'Porta: [' +
       IntToStr(JsonConection.PORTA_CHANNEL4) + ']', 2);
@@ -303,6 +305,7 @@ begin
   try
     sChannel[2].Port := JsonConection.PORTA_CHANNEL3;
     sChannel[2].Active := True;
+    sChannel[2].OnClientRead := PacketMain.GetPacket;
     LogDB.DBLog(fMain.rStatus, 'Channel_3 Started Success!!!', 0);
     LogDB.DBLog(fMain.rStatus, 'Porta: [' +
       IntToStr(JsonConection.PORTA_CHANNEL3) + ']', 2);
@@ -318,6 +321,7 @@ begin
   try
     sChannel[1].Port := JsonConection.PORTA_CHANNEL2;
     sChannel[1].Active := True;
+    sChannel[1].OnClientRead := PacketMain.GetPacket;
     LogDB.DBLog(fMain.rStatus, 'Channel_2 Started Success!!!', 0);
     LogDB.DBLog(fMain.rStatus, 'Porta: [' +
       IntToStr(JsonConection.PORTA_CHANNEL2) + ']', 2);
@@ -333,6 +337,7 @@ begin
   try
     sChannel[0].Port := JsonConection.PORTA_CHANNEL1;
     sChannel[0].Active := True;
+    sChannel[0].OnClientRead := PacketMain.GetPacket;
     LogDB.DBLog(fMain.rStatus, 'Channel_1 Started Success!!!', 0);
     LogDB.DBLog(fMain.rStatus, 'Porta: [' +
       IntToStr(JsonConection.PORTA_CHANNEL1) + ']', 2);

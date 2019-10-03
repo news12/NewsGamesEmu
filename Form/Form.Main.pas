@@ -20,10 +20,13 @@ type
     panelMain: TPanel;
     rStatus: TRichEdit;
     rStatus2: TRichEdit;
+    TrayIcon1: TTrayIcon;
     procedure btnCloseClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure btnMinimizeClick(Sender: TObject);
+    procedure TrayIcon1DblClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -39,15 +42,26 @@ implementation
 
 Uses
   Thread.Main;
- // Timer.Main;
+// Timer.Main;
 
 Var
   ThreadMain: TThreadMain;
- // TimerMain: TTimerMain;
+  // TimerMain: TTimerMain;
 
 procedure TfMain.btnCloseClick(Sender: TObject);
 begin
   Close;
+end;
+
+procedure TfMain.btnMinimizeClick(Sender: TObject);
+begin
+  Self.Hide();
+  Self.WindowState := wsMinimized;
+  TrayIcon1.BalloonTitle := 'NewsGames Emulator';
+  TrayIcon1.BalloonHint := 'Emulador minimizado para a bandeja de Icones';
+  TrayIcon1.Visible := True;
+  TrayIcon1.Animate := True;
+  TrayIcon1.ShowBalloonHint;
 end;
 
 procedure TfMain.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -57,13 +71,22 @@ end;
 
 procedure TfMain.FormCreate(Sender: TObject);
 begin
-   ThreadMain := TThreadMain.Create;
+  ThreadMain := TThreadMain.Create;
 
 end;
 
 procedure TfMain.FormShow(Sender: TObject);
 begin
-  ThreadMain.Start;
+  if Not ThreadMain.Started then
+    ThreadMain.Start;
+end;
+
+procedure TfMain.TrayIcon1DblClick(Sender: TObject);
+begin
+  TrayIcon1.Visible := False;
+  Show();
+  WindowState := wsNormal;
+  Application.BringToFront();
 end;
 
 end.

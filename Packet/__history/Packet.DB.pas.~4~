@@ -1,0 +1,260 @@
+unit Packet.DB;
+
+interface
+
+Uses
+  System.Win.ScktComp,
+  Base.Struct,
+  Account.Base,
+  FireDAC.Comp.Client,
+  Character.Main,
+  Base.Def;
+
+Type
+  TPacketDB = Class
+  Private { Private Class }
+
+  Public { Public Class }
+    Constructor Create;
+    class function ReceivBuff(Socket: TCustomWinSocket; Size: Integer): Integer;
+    Destructor Destroy; Override;
+  End;
+
+Var
+  LoginDB: TAccount;
+  Header: sHeaderDB;
+  ACC: sPlayerDB;
+  Login: p20DDB;
+  CreatChar: p20FDB;
+  queryDB: TFDQuery;
+  LoadPlayer: TCharacter;
+  LogDB: sLogDB;
+  // Guarda a conta carrega
+  PlayerDB: sPlayerDB;
+  Player: sPlayer;
+  PlayerBase: sPlayerBase;
+  SenhaDigitada: String;
+  // uSql: String;
+  AccountSave: sAccountSave;
+  qChar: TFDQuery;
+  CharSQL: String;
+
+  // Transfere a conta ao canal
+  Account: sLoadedAcc;
+
+implementation
+
+Constructor TPacketDB.Create;
+begin
+  LoginDB := TAccount.Create;
+  LoadPlayer := TCharacter.Create;
+end;
+
+class function TPacketDB.ReceivBuff(Socket: TCustomWinSocket;
+  Size: Integer): Integer;
+var
+  sSQL, uSql: String;
+  I: Word;
+begin
+
+  // Recebe o pacote
+  nPacket := Socket.ReceiveBuf(SEnvDB, 10000);
+  move(SEnvDB, Header, sizeof(Header));
+  // Case do código
+  case Header.COD of
+
+    1: // Tentativa de login
+      begin
+
+        // move
+        move(SEnvDB, Login, sizeof(Login));
+        // Login e senha
+        nName := GetString(Login.ID, 12);
+        sSQL := 'WHERE login=' + QuotedStr(nName) + ' LIMIT 1';
+        // Faz a consulta com o usuario e senha
+        queryDB := SelectTable(TableAccount, '*', '', sSQL);
+        // Verifica se achou a conta
+        if (queryDB.IsEmpty) then
+        begin
+          // Conta não encontrada, devolve o pacote com codigo 2, conta inexistente
+          Login.Header.COD := 2;
+          move(Login, SEnvDB, sizeof(Login));
+          Socket.SendBuf(SEnvDB, sizeof(Login));
+          queryDB.Close;
+        end
+        else
+        begin
+          // Conta encontrada, recebe as informações
+          LoginDB.ID := queryDB.FieldByName('ID').AsString;
+          // login já veio no pacote de login
+          // pega a senha do banco e decrypta ela
+          LoginDB.PASS := Cryptacao('D', queryDB.FieldByName('PASS').AsString);
+          LoginDB.PASS2 := queryDB.FieldByName('PASS2').AsString;
+          // senha 3 não se usa
+          LoginDB.Login := queryDB.FieldByName('LOGIN').AsString;
+          // email não precisa
+          LoginDB.STATUS := queryDB.FieldByName('STATUS').AsInteger;
+          LoginDB.NumericError := queryDB.FieldByName('NUMERIC_ERROR')
+            .AsInteger;
+          queryDB.Close;
+          // se status é maior que 2, é porque não pode logar
+          if LoginDB.STATUS > 2 then
+          begin
+            Login.Header.COD := LoginDB.STATUS;
+            move(Login, SEnvDB, sizeof(Login));
+            Socket.SendBuf(SEnvDB, sizeof(Login));
+            pLog(rStatus, '[' + LoginDB.Login +
+              '] login não permitido, status [' + inttostr(LoginDB.STATUS)
+              + ']', 1);
+          end
+          else
+          begin
+
+            SenhaDigitada := GetString(Login.PASS, 10);
+            if LoginDB.PASS <> SenhaDigitada then
+            begin
+              // Senha incorreta, sobe 1 no status  e fecha
+              // inc(LoginDB.STATUS, 1);
+              LoginDB.STATUS := 1;
+              UpdateTable(TableAccount, 'STATUS',
+                inttostr(LoginDB.STATUS), sSQL);
+              Login.Header.COD := 8;
+              move(Login, SEnvDB, sizeof(Login));
+              Socket.SendBuf(SEnvDB, sizeof(Login));
+              pLog(rStatus, '[' + LoginDB.Login + '] senha incorreta', 1);
+            end
+            else
+            begin
+              // Senha correta, status OK, bota online com status 4
+              UpdateTable(TableAccount, 'STATUS', '4', sSQL);
+              UpdateTable(TableAccount, 'LOGOUT', '1', sSQL);
+              // Carrega a conta
+              PlayerBase.User := Trim(LoginDB.Login);
+              PlayerBase.Numeric := Trim(LoginDB.PASS2);
+              PlayerBase.NumericError := LoginDB.NumericError;
+              PlayerBase.Online := LoginDB.STATUS;
+              // load_conta(Login, PlayerBase);
+              Player.ID_ACC := strtoint(LoginDB.ID);
+              Player.PASS := Trim(GetString(Login.PASS, 10));
+              Player.Numeric := Trim(LoginDB.PASS2);
+              for I := 0 to 2 do
+
+                Player.Character[I] := LoadPlayer.LoadCharacter(I).Character[I];
+              // Transfere a conta ao Servidor que solicitou
+              Account.Header.COD := 100;
+              Account.Header.clientID := Login.Header.clientID;
+              move(Player, Account.Player, sizeof(Account.Player));
+              move(Account, SEnvDB, sizeof(Account));
+              Socket.SendBuf(SEnvDB, sizeof(Account));
+              pLog(rStatus, 'o Jogador :[' + LoginDB.Login +
+                '] Conectou no jogo', 2);
+            end;
+          end;
+        end;
+      end;
+
+    2: // Registra log
+      begin
+        // move
+        move(SEnvDB, LogDB, sizeof(LogDB));
+        pLog(rStatus, LogDB.MSG, 3);
+      end;
+
+    3: // Salva a conta vinda da TM
+      begin
+        Zeromemory(@AccountSave, sizeof(AccountSave));
+        Zeromemory(@Player, sizeof(Player));
+        // move
+        move(SEnvDB, AccountSave, sizeof(AccountSave));
+        // Pega o login
+        nName := AccountSave.Player.User;
+        // CharOnline := Salvar.CharLogado.CharStatus;
+        if Trim(nName) <> '' then
+        begin
+          // Seta o status
+          // mysql_update('UPDATE usuarios SET user_status = "' +
+          // inttostr(Salvar.StatusOnline) + '" , user_errounumerica = "' +
+          // inttostr(Salvar.errounumerica) + '" WHERE user_id = "' +
+          // inttostr(Salvar.Jogador.ID_Conta) + '"');
+          uSql := 'WHERE Login =' + QuotedStr(nName);
+          UpdateTable(TableAccount, 'Status',
+            inttostr(AccountSave.StatusOnline), uSql);
+          UpdateTable(TableAccount, 'Numeric_Error',
+            inttostr(AccountSave.NumericError), uSql);
+          // Move para o Jogador
+          move(AccountSave.Player, Player, sizeof(Player));
+          // Salvar
+          // Salvar_conta(Login);
+          { Inicio Seta personagem esta logado no banco Mysql }
+
+          { Fim Seta personagem logado no banco Mysql }
+          if AccountSave.StatusOnline = 0 then
+          begin
+            pLog(rStatus, '[' + nName + '] Desconectou do jogo', 2);
+
+          end;
+
+        end;
+      end;
+
+    4: // Criar personagem
+      begin
+        // move
+        move(SEnvDB, CreatChar, sizeof(CreatChar));
+        nName := GetString(CreatChar.Name, 12);
+        // Faz a consulta a procura do personagem
+        // mysql_select('SELECT nome FROM personagens WHERE nome = "' + nome +
+        // '" LIMIT 1');
+        CharSQL := 'WHERE name=' + QuotedStr(nName);
+        qChar := SelectTable(TableCharacter, '*', '', CharSQL);
+        // Verifica se achou o personagem
+        if (qChar.IsEmpty) then // não encontrou personagem
+        begin
+          /// devolve o pacote com codigo 101,
+          // criação de char autorizada
+          CreatChar.Header.COD := 101;
+          move(CreatChar, SEnvDB, sizeof(CreatChar));
+          // envia o packet para criar o personagem
+          Socket.SendBuf(SEnvDB, sizeof(CreatChar));
+          // Cria o novo char
+          // mysql_insert('INSERT INTO personagens (nome) VALUES (''' +
+          // nome + ''')');
+          // Logs('[' + Login + '] Criou o Personagem: [' + nome + ']');
+          // DescLog := '[' + Login + '] Criou o Personagem [' + nome + ']';
+          // mysql_log(
+          // 'INSERT INTO LOG (data,data_hora,descricao) VALUES (:DATA,:HORA,:DESCRICAO)');
+        end
+        else
+        begin
+          // Conta encontrada, devolve com id 9,( 4 bytes do header), mensagem ao jogador
+          CreatChar.Header.COD := 9;
+          move(CreatChar, SEnvDB, 4);
+          Socket.SendBuf(SEnvDB, 4);
+        end;
+      end;
+
+    5: // Deletar personagem
+      begin
+        // // move
+        // move(SEnvDB, DeleteCharDB, sizeof(DeleteCharDB));
+        // nome := GetString(DeleteCharDB.nome, 12);
+        // // Drop no personagem
+        // mysql_drop('DELETE FROM personagens WHERE personagens.nome = ''' + nome
+        // + ''' LIMIT 1');
+        // // logs
+        // Logs('[' + Login + '] Deletou o Personagem: [' + nome + ']');
+        // DescLog := '[' + Login + '] Deletou o Personagem [' + nome + ']';
+        // mysql_log(
+        // 'INSERT INTO LOG (data,data_hora,descricao) VALUES (:DATA,:HORA,:DESCRICAO)');
+      end;
+
+  end;
+end;
+
+destructor TPacketDB.Destroy;
+begin
+
+  inherited;
+end;
+
+end.

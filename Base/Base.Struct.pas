@@ -20,14 +20,10 @@ Uses
   _Function.DC,
   _Function.Notice,
   _Function.Numeric,
-  Packet.Main;
+  Packet.Main,
+  Account.Base;
 
 Var
-  sChannel1: TServerSocket;
-  sChannel2: TServerSocket;
-  sChannel3: TServerSocket;
-  sChannel4: TServerSocket;
-  sChannel5: TServerSocket;
   sChannel: Array of TServerSocket;
   MaxChannel: Word;
   // Conexao
@@ -83,6 +79,7 @@ Var
   Notice: TFunctionNotice;
   Numeric: TFunctionNumeric;
   PacketMain: TPacketMain;
+  LoginDB: TAccount;
 
 Type
   ArrayName = array of Byte;

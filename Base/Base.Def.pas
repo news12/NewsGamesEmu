@@ -415,7 +415,7 @@ Type
     }
   End;
 {$ENDREGION}
-{$REGION '[X] Itemlist'}
+{$REGION '# [X] Itemlist'}
 
 type
   sItemList = Record
@@ -432,6 +432,13 @@ type
   end;
 {$ENDREGION}
 
+{$REGION '# Log DB'}
+Type
+  sLogDB = Record
+    Header: sHeaderDB;
+    MSG: String[250];
+  end;
+{$ENDREGION}
 implementation
 
 end.

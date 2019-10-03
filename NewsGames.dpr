@@ -31,7 +31,9 @@ uses
   _Function.Notice in 'Function\_Function.Notice.pas',
   Character.Main in 'Character\Character.Main.pas',
   Character.Bag in 'Character\Character.Bag.pas',
-  Character.Status in 'Character\Character.Status.pas';
+  Character.Status in 'Character\Character.Status.pas',
+  Packet.DB in 'Packet\Packet.DB.pas',
+  Account.Base in 'Account\Account.Base.pas';
 
 {$R *.res}
 

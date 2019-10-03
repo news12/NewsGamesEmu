@@ -20,8 +20,7 @@ Type
     constructor create;
 
     class procedure SendPacket(ClientID: Word; pSize: Word);
-    class procedure GetPacket(Sender: TObject; Socket: TCustomWinSocket;
-      Channel: Word);
+    class procedure GetPacket(Sender: TObject; Socket: TCustomWinSocket);
 
     destructor destroy; override;
 
@@ -46,10 +45,9 @@ begin
   //
 end;
 
-class procedure TPacketMain.GetPacket(Sender: TObject; Socket: TCustomWinSocket;
-  Channel: Word);
+class procedure TPacketMain.GetPacket(Sender: TObject; Socket: TCustomWinSocket);
 Var
-  nChannel: TServerSocket;
+
   size: Word; // Tamanho do pacote
   X: Word; // Loop
   S: String; // Ultimo pacote recebido
@@ -59,7 +57,6 @@ Var
   pLoginDB: p20DDB; // pacote enviado ao DB com a solicitação de login
 begin
 
-  nChannel := TServerSocket(Sender).create(Nil);
   packetLast := TStringList.create;
   // Header := tHeader.Create;
   // Recebe o pacote
@@ -131,7 +128,7 @@ begin
             if Client[ClientID].Handle = 0 then
             begin
               Client[ClientID].Handle := Socket.SocketHandle;
-              Client[ClientID].Conect := nChannel.Socket.ActiveConnections - 1;
+              Client[ClientID].Conect := TServerSocket(Sender).Socket.ActiveConnections - 1;
               Break;
             end;
           end;

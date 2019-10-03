@@ -7,6 +7,7 @@ Uses
   FireDAC.Comp.Client,
   Vcl.Controls,
   Vcl.Forms,
+  Data.DB,
   Vcl.Dialogs,
   Vcl.ExtCtrls
   // uStruct,

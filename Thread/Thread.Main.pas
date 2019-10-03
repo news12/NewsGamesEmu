@@ -10,7 +10,6 @@ Uses
   Vcl.Forms,
   Vcl.Dialogs,
   Vcl.ExtCtrls,
-  Base.Struct,
   Form.Modulo,
   Thread.DB,
   DB.Conect,
@@ -38,7 +37,9 @@ Var
 Implementation
 
 Uses
-  Form.Main;
+  System.Win.ScktComp,
+  Form.Main,
+  Base.Struct;
 
 var
   ThreadDB: tThreadDB;
