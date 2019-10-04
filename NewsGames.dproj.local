@@ -93,10 +93,10 @@
     <Transaction>2019/09/30 20:03:43.000.851,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Unit1.pas=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Character\Character.Bag.pas</Transaction>
     <Transaction>2019/09/30 20:10:15.000.899,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Unit1.pas</Transaction>
     <Transaction>2019/09/30 20:10:31.000.845,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Unit1.pas=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Character\Character.Status.pas</Transaction>
-    <Transaction>2019/10/03 14:03:30.192,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Unit1.pas</Transaction>
-    <Transaction>2019/10/03 14:03:53.140,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Packet\Packet.DB.pas=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Unit1.pas</Transaction>
-    <Transaction>2019/10/03 15:19:11.432,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Unit1.pas</Transaction>
-    <Transaction>2019/10/03 15:19:40.662,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Account\Account.Base.pas=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Unit1.pas</Transaction>
+    <Transaction>2019/10/03 14:03:30.000.192,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Unit1.pas</Transaction>
+    <Transaction>2019/10/03 14:03:53.000.140,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Packet\Packet.DB.pas=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Unit1.pas</Transaction>
+    <Transaction>2019/10/03 15:19:11.000.432,=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Unit1.pas</Transaction>
+    <Transaction>2019/10/03 15:19:40.000.662,C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Account\Account.Base.pas=C:\Users\uell1\OneDrive\Área de Trabalho\EmuladorWYD\NewsGames\Source\Unit1.pas</Transaction>
   </Transactions>
 	<ProjectSortOrder AutoSort="0" SortType="0">
     <File Path="Account"/>

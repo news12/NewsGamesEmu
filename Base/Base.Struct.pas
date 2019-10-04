@@ -25,6 +25,7 @@ Uses
 
 Var
   sChannel: Array of TServerSocket;
+ // nChannel1 : TServerSocket;
   MaxChannel: Word;
   // Conexao
   CountDisconect: Integer;

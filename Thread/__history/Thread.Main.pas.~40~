@@ -10,12 +10,12 @@ Uses
   Vcl.Forms,
   Vcl.Dialogs,
   Vcl.ExtCtrls,
-  Base.Struct,
   Form.Modulo,
   Thread.DB,
   DB.Conect,
   Thread.Generic,
-  _Function.Base;
+  _Function.Base,
+  _Function.BAN;
 
 Type
   tThreadMain = class(TThread)
@@ -31,15 +31,19 @@ Type
     destructor Destroy; override;
   end;
 
+Var
+  FunctionBase: Tfunction;
+
 Implementation
 
 Uses
-  Form.Main;
+  System.Win.ScktComp,
+  Form.Main,
+  Base.Struct;
 
 var
   ThreadDB: tThreadDB;
   ThreadGeneric: TThreadGeneric;
-  FunctionBase: Tfunction;
   DBConect: TDBConect;
 
 constructor tThreadMain.Create;
@@ -64,9 +68,9 @@ begin
       ThreadGeneric.Start;
 
     FunctionBase.CarregaJson;
-    FunctionBase.LoadSocket;
     DBConect.ConectaDB(fMain.rStatus);
-    Sleep(ThirtySec);
+    FunctionBase.LoadSocket;
+    Sleep(OneMin);
   end;
   // OnTerminate := Start;
 

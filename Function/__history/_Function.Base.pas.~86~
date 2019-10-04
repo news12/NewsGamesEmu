@@ -8,7 +8,7 @@ Uses
   Base.LoadConfig,
   System.Win.ScktComp,
   FireDAC.Comp.Client,
-  Log.DB;
+  Base.Struct;
 
 Type
   TFunction = Class
@@ -47,12 +47,12 @@ implementation
 
 Uses
   Form.Main,
-  Base.Struct,
   _Function.BAN,
   _Function.DC,
   _Function.Notice,
   _Function.Numeric,
   Base.GetConexao,
+  Log.DB,
   Packet.Main;
 
 Var
@@ -72,7 +72,25 @@ begin
 end;
 
 class procedure TFunction.LoadSocket;
+Var
+  I: Word;
 begin
+  // proteção para não recriar o array de channels
+  if Not Assigned(sChannel) then
+  begin
+    MaxChannel := JsonConection.MaxChannel;
+    SetLength(sChannel, MaxChannel);
+    // decrementa 1 pois vamos usar um array
+    for I := 0 to MaxChannel - 1 do
+    begin
+
+      sChannel[I] := TServerSocket.Create(Nil);
+      sChannel[I].Name := 'Schannel' + IntToStr(I);
+
+    end;
+
+  end;
+
   case MaxChannel of
     1:
       pChannel1;
@@ -242,15 +260,6 @@ Var
 begin
   try
     LoadConfig.LoadFiles(fMain.rStatus);
-    // decrementa 1 pois vamos usar um array
-    MaxChannel := JsonConection.MaxChannel - 1;
-    SetLength(sChannel, MaxChannel);
-
-    for I := 0 to MaxChannel do
-    begin
-      sChannel[I] := TServerSocket.Create(Nil);
-      sChannel[I].Name := 'Schannel' + IntToStr(I);
-    end;
 
   Except
     // erro ao carregar files
@@ -271,12 +280,20 @@ end;
 class procedure TFunction.pChannel5;
 begin
   try
+    // if Not sChannel[4].Active then
+    // begin
     sChannel[4].Port := JsonConection.PORTA_CHANNEL5;
+    sChannel[4].OnClientRead := PacketMain.GetPacket;
+    sChannel[4].ServerType := stNonBlocking;
+    sChannel[4].ThreadCacheSize := 10;
+    sChannel[4].OnClientConnect := PacketMain.ClientConect;
+    sChannel[4].OnClientDisconnect := PacketMain.ClientDisconect;
     sChannel[4].Active := True;
     LogDB.DBLog(fMain.rStatus, 'Channel_5 Started Success!!!', 0);
     LogDB.DBLog(fMain.rStatus, 'Porta: [' +
       IntToStr(JsonConection.PORTA_CHANNEL5) + ']', 2);
     LogDB.DBLog(fMain.rStatus, 'IP: [' + JsonConection.IP_CHANNEL5 + ']', 2);
+    // end;
   except
     LogDB.DBLog(fMain.rStatus, 'Erro ao abrir conexão de sockets: [' +
       IntToStr(JsonConection.PORTA_CHANNEL5) + ']', 1);
@@ -286,12 +303,20 @@ end;
 class procedure TFunction.pChannel4;
 begin
   try
+    // if Not sChannel[3].Active then
+    // begin
     sChannel[3].Port := JsonConection.PORTA_CHANNEL4;
+    sChannel[3].OnClientRead := PacketMain.GetPacket;
+    sChannel[3].ServerType := stNonBlocking;
+    sChannel[3].ThreadCacheSize := 10;
+    sChannel[3].OnClientConnect := PacketMain.ClientConect;
+    sChannel[3].OnClientDisconnect := PacketMain.ClientDisconect;
     sChannel[3].Active := True;
     LogDB.DBLog(fMain.rStatus, 'Channel_4 Started Success!!!', 0);
     LogDB.DBLog(fMain.rStatus, 'Porta: [' +
       IntToStr(JsonConection.PORTA_CHANNEL4) + ']', 2);
     LogDB.DBLog(fMain.rStatus, 'IP: [' + JsonConection.IP_CHANNEL4 + ']', 2);
+    // end;
   except
     LogDB.DBLog(fMain.rStatus, 'Erro ao abrir conexão de sockets: [' +
       IntToStr(JsonConection.PORTA_CHANNEL4) + ']', 1);
@@ -301,12 +326,20 @@ end;
 class procedure TFunction.pChannel3;
 begin
   try
+    // if Not sChannel[2].Active then
+    // begin
     sChannel[2].Port := JsonConection.PORTA_CHANNEL3;
+    sChannel[2].OnClientRead := PacketMain.GetPacket;
+    sChannel[2].ServerType := stNonBlocking;
+    sChannel[2].ThreadCacheSize := 10;
+    sChannel[2].OnClientConnect := PacketMain.ClientConect;
+    sChannel[2].OnClientDisconnect := PacketMain.ClientDisconect;
     sChannel[2].Active := True;
     LogDB.DBLog(fMain.rStatus, 'Channel_3 Started Success!!!', 0);
     LogDB.DBLog(fMain.rStatus, 'Porta: [' +
       IntToStr(JsonConection.PORTA_CHANNEL3) + ']', 2);
     LogDB.DBLog(fMain.rStatus, 'IP: [' + JsonConection.IP_CHANNEL3 + ']', 2);
+    // end;
   except
     LogDB.DBLog(fMain.rStatus, 'Erro ao abrir conexão de sockets: [' +
       IntToStr(JsonConection.PORTA_CHANNEL3) + ']', 1);
@@ -316,12 +349,20 @@ end;
 class procedure TFunction.pChannel2;
 begin
   try
+    // if Not sChannel[1].Active then
+    // begin
     sChannel[1].Port := JsonConection.PORTA_CHANNEL2;
+    sChannel[1].OnClientRead := PacketMain.GetPacket;
+    sChannel[1].ServerType := stNonBlocking;
+    sChannel[1].ThreadCacheSize := 10;
+    sChannel[1].OnClientConnect := PacketMain.ClientConect;
+    sChannel[1].OnClientDisconnect := PacketMain.ClientDisconect;
     sChannel[1].Active := True;
     LogDB.DBLog(fMain.rStatus, 'Channel_2 Started Success!!!', 0);
     LogDB.DBLog(fMain.rStatus, 'Porta: [' +
       IntToStr(JsonConection.PORTA_CHANNEL2) + ']', 2);
     LogDB.DBLog(fMain.rStatus, 'IP: [' + JsonConection.IP_CHANNEL2 + ']', 2);
+    // end;
   except
     LogDB.DBLog(fMain.rStatus, 'Erro ao abrir conexão de sockets: [' +
       IntToStr(JsonConection.PORTA_CHANNEL2) + ']', 1);
@@ -331,12 +372,21 @@ end;
 class procedure TFunction.pChannel1;
 begin
   try
+    // if Not sChannel[0].Active then
+    // begin
     sChannel[0].Port := JsonConection.PORTA_CHANNEL1;
+    sChannel[0].ServerType := stNonBlocking;
+    sChannel[0].ThreadCacheSize := 10;
+    sChannel[0].OnClientRead := PacketMain.GetPacket;
+    sChannel[0].OnClientConnect := PacketMain.ClientConect;
+    sChannel[0].OnClientDisconnect := PacketMain.ClientDisconect;
     sChannel[0].Active := True;
+
     LogDB.DBLog(fMain.rStatus, 'Channel_1 Started Success!!!', 0);
     LogDB.DBLog(fMain.rStatus, 'Porta: [' +
       IntToStr(JsonConection.PORTA_CHANNEL1) + ']', 2);
     LogDB.DBLog(fMain.rStatus, 'IP: [' + JsonConection.IP_CHANNEL1 + ']', 2);
+    // end;
   except
     LogDB.DBLog(fMain.rStatus, 'Erro ao abrir conexão de sockets: [' +
       IntToStr(JsonConection.PORTA_CHANNEL1) + ']', 1);

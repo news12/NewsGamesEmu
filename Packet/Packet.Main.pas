@@ -21,6 +21,8 @@ Type
 
     class procedure SendPacket(ClientID: Word; pSize: Word);
     class procedure GetPacket(Sender: TObject; Socket: TCustomWinSocket);
+    class procedure ClientConect(Sender: TObject; Socket: TCustomWinSocket);
+    class procedure ClientDisconect(Sender: TObject; Socket: TCustomWinSocket);
 
     destructor destroy; override;
 
@@ -33,11 +35,26 @@ Uses
   _Function.Base,
   _Function.Ban,
   Thread.Main,
-  _Function.DC;
+  _Function.DC,
+  Form.Main;
 
 constructor TPacketMain.create;
 begin
 
+end;
+
+class procedure TPacketMain.ClientDisconect(Sender: TObject;
+  Socket: TCustomWinSocket);
+begin
+  LogDB.DBLog(fMain.rStatus2, 'Client : [IP: ' + Socket.RemoteAddress +
+    '] Disconectado', 0);
+end;
+
+class procedure TPacketMain.ClientConect(Sender: TObject;
+  Socket: TCustomWinSocket);
+begin
+  LogDB.DBLog(fMain.rStatus2, 'Client : [IP: ' + Socket.RemoteAddress +
+    '] conectado', 0);
 end;
 
 class procedure TPacketMain.SendPacket(ClientID: Word; pSize: Word);
@@ -45,7 +62,8 @@ begin
   //
 end;
 
-class procedure TPacketMain.GetPacket(Sender: TObject; Socket: TCustomWinSocket);
+class procedure TPacketMain.GetPacket(Sender: TObject;
+  Socket: TCustomWinSocket);
 Var
 
   size: Word; // Tamanho do pacote
@@ -128,7 +146,8 @@ begin
             if Client[ClientID].Handle = 0 then
             begin
               Client[ClientID].Handle := Socket.SocketHandle;
-              Client[ClientID].Conect := TServerSocket(Sender).Socket.ActiveConnections - 1;
+              Client[ClientID].Conect := TServerSocket(Sender)
+                .Socket.ActiveConnections - 1;
               Break;
             end;
           end;

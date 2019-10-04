@@ -20,9 +20,9 @@ object fMain: TfMain
   PixelsPerInch = 96
   TextHeight = 13
   object panelRigth: TPanel
-    Left = 716
+    Left = 729
     Top = 0
-    Width = 15
+    Width = 2
     Height = 430
     Align = alRight
     BevelOuter = bvNone
@@ -78,6 +78,7 @@ object fMain: TfMain
       Height = 33
       Align = alRight
       Caption = 'Minimizer'
+      OnClick = btnMinimizeClick
       ExplicitLeft = 520
       ExplicitTop = 5
       ExplicitHeight = 28
@@ -96,25 +97,20 @@ object fMain: TfMain
       Font.Style = []
       ParentFont = False
       TabOrder = 0
-      ExplicitLeft = 8
-      ExplicitHeight = 30
       object lblServerTimer: TLabel
-        Left = 2
+        Left = 33
         Top = 15
-        Width = 181
-        Height = 16
-        Align = alClient
+        Width = 103
+        Height = 13
         Alignment = taCenter
         Caption = '00/00/0000 00:00:00'
-        ExplicitWidth = 103
-        ExplicitHeight = 13
       end
     end
   end
   object panelMain: TPanel
     Left = 15
     Top = 0
-    Width = 701
+    Width = 714
     Height = 430
     Align = alClient
     Caption = 'panelMain'
@@ -123,7 +119,7 @@ object fMain: TfMain
     object rStatus: TRichEdit
       Left = 1
       Top = 1
-      Width = 699
+      Width = 712
       Height = 312
       Align = alTop
       BevelInner = bvNone
@@ -138,13 +134,14 @@ object fMain: TfMain
       Lines.Strings = (
         '...')
       ParentFont = False
+      ScrollBars = ssVertical
       TabOrder = 0
       Zoom = 100
     end
     object rStatus2: TRichEdit
       Left = 1
       Top = 313
-      Width = 699
+      Width = 712
       Height = 116
       Align = alClient
       BevelInner = bvNone
@@ -157,10 +154,21 @@ object fMain: TfMain
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ScrollBars = ssVertical
       TabOrder = 1
       Zoom = 100
-      ExplicitTop = 273
-      ExplicitHeight = 156
     end
+  end
+  object TrayIcon1: TTrayIcon
+    OnDblClick = TrayIcon1DblClick
+    Left = 591
+    Top = 312
+  end
+  object ServerSocket1: TServerSocket
+    Active = True
+    Port = 0
+    ServerType = stNonBlocking
+    Left = 295
+    Top = 216
   end
 end

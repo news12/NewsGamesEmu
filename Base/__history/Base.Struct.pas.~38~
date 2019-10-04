@@ -17,15 +17,15 @@ Uses
   Log.DB,
   Base.Def,
   _Function.BAN,
-  _Function.DC;
+  _Function.DC,
+  _Function.Notice,
+  _Function.Numeric,
+  Packet.Main,
+  Account.Base;
 
 Var
-  sChannel1: TServerSocket;
-  sChannel2: TServerSocket;
-  sChannel3: TServerSocket;
-  sChannel4: TServerSocket;
-  sChannel5: TServerSocket;
   sChannel: Array of TServerSocket;
+  nChannel1 : TServerSocket;
   MaxChannel: Word;
   // Conexao
   CountDisconect: Integer;
@@ -77,6 +77,10 @@ Var
   SvClosed: Boolean;
   BAN: TFunctionBAN;
   DC: TFunctionDC;
+  Notice: TFunctionNotice;
+  Numeric: TFunctionNumeric;
+  PacketMain: TPacketMain;
+  LoginDB: TAccount;
 
 Type
   ArrayName = array of Byte;
